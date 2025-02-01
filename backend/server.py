@@ -1,3 +1,5 @@
+# server.py
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -15,7 +17,7 @@ def submit_code():
         print(line)
 
     
-    initial_arr = [1,2,3,4]
+    initial_arr = [1, 2, 3, 4]
     manipulations = [
         { 'type': 'append', 'value': 2 },
         { 'type': 'append', 'value': 3 },

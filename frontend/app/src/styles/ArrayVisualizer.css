@@ -38,7 +38,10 @@
 
 .bottom-group {
     display: flex;
-    align-items: center;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: flex-end;
+    margin-bottom: 20px;
 }
 
 .manipulate-button {

@@ -12,6 +12,8 @@ const App: FC = () => {
   const [initialized, setInitialized] = useState(false);
 
   const parseCode = async (code: string) => {
+    setInitialized(false);
+    setInitialArray([]);
     try {
       const lines = code.split("\n");
       const response = await axios.post('http://127.0.0.1:4000/submit_code', {
