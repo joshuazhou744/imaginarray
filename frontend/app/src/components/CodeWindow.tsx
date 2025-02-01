@@ -3,12 +3,13 @@ import "codemirror/lib/codemirror.css";
 import "codemirror/mode/python/python";
 import "../styles/CodeWindow.css";
 import "codemirror/theme/oceanic-next.css";
-import axios from 'axios';
 import { useState } from "react";
 
+interface CodeWindowProps {
+    parseCode: (code: string) => void;
+}
 
-
-export default function CodeWindow() {
+export default function CodeWindow({ parseCode }: CodeWindowProps) {
     const [code, setCode] = useState("");
 
     const options = {
@@ -32,12 +33,4 @@ export default function CodeWindow() {
 
         </div>
     );
-}
-
-const parseCode = async(code: string) => {
-    const lines = code.split("\n");
-    console.log(lines)
-    const response = await axios.post('http://172.30.145.175:4000/submit_code', {
-       code: lines 
-    })
 }

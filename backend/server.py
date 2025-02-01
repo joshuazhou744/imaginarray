@@ -8,16 +8,20 @@ CORS(app, origins="http://localhost:5173", supports_credentials=True)
 
 @app.route("/submit_code", methods=["POST"])
 def submit_code():
-    print(request.json)
     code = request.json.get("code")
     code = clean_code(code)
     
-    # for line in code:
-    #     print(line)
+    for line in code:
+        print(line)
 
     
-    initial_arr = None
-    manipulations = None
+    initial_arr = [1,2,3,4]
+    manipulations = [
+        { 'type': 'append', 'value': 2 },
+        { 'type': 'append', 'value': 3 },
+        { 'type': 'swap', 'indices': [0, 1] },
+        { 'type': 'replace', 'index': 0, 'value': 6 },
+  ] ;
     final_arr = None
     
     return jsonify({
