@@ -12,8 +12,7 @@ const App: FC = () => {
   const manipulations: Manipulation<unknown>[] = [
     { type: 'append', value: 4 },
     { type: 'append', value: 5 },
-    { type: 'pop' },
-    { type: 'reverse'}
+    {type: "reverse"}
   ];
 
   return (

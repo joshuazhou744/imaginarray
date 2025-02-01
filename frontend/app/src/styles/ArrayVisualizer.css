@@ -1,11 +1,16 @@
+/* ArrayVisualizer.css */
+
 .container {
     display: 'flex';
     flex-direction: 'column';
     align-items: 'center';
+    justify-content: center;
+    height: 100%;
 }
 
 .perspective {
-    perspective: '1000px'
+    perspective: '1000px';
+    margin: 10px;
 }
 
 .flip-container {
@@ -29,8 +34,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .manipulate-button {
-    margin-top: 20px;
+    margin: 20px 0 0 20px;
 }
