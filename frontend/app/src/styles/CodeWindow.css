@@ -7,10 +7,11 @@
 }
 
 .CodeMirror {
-  height: 80vh;
+  height: 75vh;
   border-radius: 15px;
   padding: 2vw 2vh;
-  margin: 2vh 2vw 0 2vw; /* top, right, bottom, left */
+  margin: 7vh 2vw 0 2vw; /* top, right, bottom, left */
+  font-size: 12px;
 }
 
 

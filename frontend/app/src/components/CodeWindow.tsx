@@ -2,7 +2,7 @@ import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/python/python";
 import "../styles/CodeWindow.css";
-import "codemirror/theme/ayu-dark.css";
+import "codemirror/theme/oceanic-next.css";
 
 
 export default function CodeWindow() {
@@ -10,7 +10,7 @@ export default function CodeWindow() {
         lineNumbers: true,
         lineWrapping: true,
         mode: "python",
-        theme: "ayu-dark",
+        theme: "oceanic-next"
     }
     
     return (
