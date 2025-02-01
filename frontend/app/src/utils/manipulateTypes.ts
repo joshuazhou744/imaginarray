@@ -5,6 +5,11 @@ export interface AppendManipulation<T> {
     value: T;
 }
 
+export interface SwapManipulation {
+    type: 'swap';
+    indices: [number, number];
+}
+
 export interface PopManipulation {
     type: 'pop';
 }
@@ -13,4 +18,8 @@ export interface ReverseManipulation {
     type: 'reverse';
 }
 
-export type Manipulation<T> = AppendManipulation<T> | PopManipulation | ReverseManipulation;
+export type Manipulation<T> = 
+    | AppendManipulation<T>
+    | PopManipulation
+    | ReverseManipulation
+    | SwapManipulation;   

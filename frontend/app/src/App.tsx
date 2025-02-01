@@ -10,8 +10,9 @@ const App: FC = () => {
   const initialArray = [1, 2, 3];
 
   const manipulations: Manipulation<unknown>[] = [
-    { type: 'append', value: 4 },
-    { type: 'append', value: 5 },
+    { type: 'append', value: 2 },
+    { type: 'append', value: 3 },
+    { type: 'swap', indices: [0, 2] },
     {type: "reverse"}
   ];
 

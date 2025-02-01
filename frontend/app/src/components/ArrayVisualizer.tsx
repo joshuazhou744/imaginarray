@@ -15,6 +15,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
     const [displayArray, setDisplayArray] = useState<T[]>(initialArray);
     const processingRef = useRef(false);
     const [reverseTrigger, setReverseTrigger] = useState(false);
+    const [swappedIndices, setSwappedIndices] = useState<[number, number] | null>(null);
 
     const processManipulations = () => {
         if (processingRef.current) return;
@@ -40,7 +41,31 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                     }
                 );
                 setReverseTrigger(prev => !prev);
-            }
+            } else if (instruction.type === 'swap') {
+                const [i, j] = instruction.indices;
+                if (
+                  i < 0 ||
+                  j < 0 ||
+                  i >= displayArray.length ||
+                  j >= displayArray.length ||
+                  i === j
+                ) {
+                  alert('Invalid swap indices. Please provide two different indices within the array bounds.');
+                  console.log('Invalid swap indices:', instruction.indices);
+                } else {
+                  setSwappedIndices(instruction.indices);
+                  setTimeout(() => {
+                    setDisplayArray(prevArray => {
+                      const newArray = [...prevArray];
+                      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                      return newArray;
+                    });
+                    setTimeout(() => {
+                      setSwappedIndices(null);
+                    }, 500);
+                  }, 100);
+                }
+              }
             currentIndex += 1;
             setTimeout(processNext, 400);
           } else {
@@ -62,20 +87,23 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                     className="flip-container"
                 >
                     <AnimatePresence>
-                        {displayArray.map((item, index) => (
-                            <motion.div
-                            key={index}
-                            layout
-                            variants={arrayItemVariants}
-                            initial="initial"
-                            animate="animate"
-                            exit="exit"
-                            transition={{ duration: 0.5 }}
-                            className="array-item"
-                            >
-                            {JSON.stringify(item)}
-                            </motion.div>
-                        ))}
+                        {displayArray.map((item, index) => {
+                            const isSwapped = swappedIndices !== null && (swappedIndices[0] === index || swappedIndices[1] === index);
+                            return (
+                                <motion.div
+                                    key={index}
+                                    layout
+                                    variants={arrayItemVariants}
+                                    initial="initial"
+                                    exit="exit"
+                                    animate={isSwapped ? { opacity: 1, y: 0, scale: [1, 1.2, 1] } : "animate"}
+                                    transition={{ duration: 0.5 }}
+                                    className="array-item"
+                                    >
+                                    {JSON.stringify(item)}
+                                </motion.div>
+                            )
+                        })}
                     </AnimatePresence>
                 </motion.div>
             </div>
