@@ -5,4 +5,9 @@ export interface AppendManipulation<T> {
     value: T;
 }
 
-export type Manipulation<T> = AppendManipulation<T>;
+export interface PopManipulation {
+    type: 'pop';
+    value: null;
+}
+
+export type Manipulation<T> = AppendManipulation<T> | PopManipulation;
