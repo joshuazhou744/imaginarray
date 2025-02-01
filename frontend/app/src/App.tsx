@@ -3,6 +3,7 @@ import { FC } from 'react';
 import ArrayVisualizer from "./components/ArrayVisualizer"
 import { Manipulation } from "./utils/manipulateTypes";
 import CodeWindow from './components/CodeWindow';
+import './styles/App.css';
 
 const App: FC = () => {
 
@@ -16,16 +17,14 @@ const App: FC = () => {
   ];
 
   return (
-    <div className="split-screen">
+    <div className="split-screen-container">
       <div className='left'>
-          <CodeWindow></CodeWindow>
+          <CodeWindow/>
       </div>
       <div className='right'>
         <h2>Array Manipulation Visualization</h2>
         <ArrayVisualizer initialArray={initialArray} manipulations={manipulations}/>
       </div>
-
-      
     </div>
   )
 }

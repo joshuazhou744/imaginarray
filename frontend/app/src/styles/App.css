@@ -1,11 +1,8 @@
-.split-screen {
+.split-screen-container {
   display: grid;
-  grid-template-columns: 50% 50%; /* Create two equal columns */
+  grid-template-columns: 50% 50%;
   height: 100vh;
-}
-
-.left, .right {
-  padding: 20px;
+  margin: -10px;
 }
 
 .left {
