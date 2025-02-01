@@ -7,12 +7,12 @@ import './styles/App.css';
 
 const App: FC = () => {
 
-  const initialArray = [1, 'two', { three: 3 }];
+  const initialArray = [1, 2, 3];
 
   const manipulations: Manipulation<unknown>[] = [
     { type: 'append', value: 4 },
-    { type: 'append', value: 'five' },
-    { type: 'append', value: { six: 6 } },
+    { type: 'append', value: 5 },
+    { type: 'pop' },
     { type: 'reverse'}
   ];
 

@@ -2,6 +2,8 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Manipulation } from '../utils/manipulateTypes';
+import { arrayItemVariants } from '../animations/arrayItemVariants';
+import "../styles/ArrayVisualizer.css";
 
 
 interface ArrayVisualizerProps<T> {
@@ -12,6 +14,7 @@ interface ArrayVisualizerProps<T> {
 const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerProps<T>): JSX.Element => {
     const [displayArray, setDisplayArray] = useState<T[]>(initialArray);
     const processingRef = useRef(false);
+    const [reverseTrigger, setReverseTrigger] = useState(false);
 
     const processManipulations = () => {
         if (processingRef.current) return;
@@ -33,10 +36,10 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
             } else if (instruction.type === 'reverse') {
                 setDisplayArray(
                     prevArray => {
-                        prevArray = [...prevArray].reverse()
-                        return prevArray
+                        return [...prevArray].reverse()
                     }
                 );
+                setReverseTrigger(prev => !prev);
             }
             currentIndex += 1;
             setTimeout(processNext, 400);
@@ -49,29 +52,34 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
       };
 
     return (
-        <div>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <AnimatePresence>
-                {displayArray.map((item, index) => (
-                    <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                        padding: '10px',
-                        border: '1px solid #ccc',
-                        borderRadius: '5px',
-                        backgroundColor: '#f0f0f0'
+        <div className='container'>
+            <div className='perspective'>
+                <motion.div
+                    animate={{
+                        rotateY: reverseTrigger ? 360 : 0
                     }}
-                    >
-                    {JSON.stringify(item)}
-                    </motion.div>
-                ))}
-                </AnimatePresence>
+                    transition={{ duration: 0.6 }}
+                    className="flip-container"
+                >
+                    <AnimatePresence>
+                        {displayArray.map((item, index) => (
+                            <motion.div
+                            key={index}
+                            layout
+                            variants={arrayItemVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            transition={{ duration: 0.5 }}
+                            className="array-item"
+                            >
+                            {JSON.stringify(item)}
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
             </div>
-            <button onClick={processManipulations} style={{ marginTop: '20px' }}>
+            <button onClick={processManipulations} className='manipulate-button'>
                 manipulate
             </button>
         </div>
