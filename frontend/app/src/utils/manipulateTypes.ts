@@ -7,7 +7,10 @@ export interface AppendManipulation<T> {
 
 export interface PopManipulation {
     type: 'pop';
-    value: null;
 }
 
-export type Manipulation<T> = AppendManipulation<T> | PopManipulation;
+export interface ReverseManipulation {
+    type: 'reverse';
+}
+
+export type Manipulation<T> = AppendManipulation<T> | PopManipulation | ReverseManipulation;

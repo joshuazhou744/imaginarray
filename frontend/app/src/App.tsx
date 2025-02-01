@@ -11,6 +11,7 @@ const App: FC = () => {
     { type: 'append', value: 4 },
     { type: 'append', value: 'five' },
     { type: 'append', value: { six: 6 } },
+    { type: 'reverse'}
   ];
 
   return (

@@ -30,9 +30,16 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                 newArray.pop();
                 return newArray;
               });
+            } else if (instruction.type === 'reverse') {
+                setDisplayArray(
+                    prevArray => {
+                        prevArray = [...prevArray].reverse()
+                        return prevArray
+                    }
+                );
             }
             currentIndex += 1;
-            setTimeout(processNext, 1000);
+            setTimeout(processNext, 400);
           } else {
             processingRef.current = false;
           }
