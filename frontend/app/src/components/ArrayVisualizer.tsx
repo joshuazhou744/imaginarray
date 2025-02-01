@@ -14,11 +14,17 @@ interface ArrayVisualizerProps<T> {
 
 const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerProps<T>): JSX.Element => {
     const [displayArray, setDisplayArray] = useState<T[]>(initialArray);
+    const currentArrayRef = useRef<T[]>(initialArray);
     const processingRef = useRef(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [reverseTrigger, setReverseTrigger] = useState(false);
     const [swappedIndices, setSwappedIndices] = useState<[number, number] | null>(null);
     const [replacedIndex, setReplacedIndex] = useState<number | null>(null);
+
+    const updateArray = (newArray: T[]) => {
+      setDisplayArray(newArray);
+      currentArrayRef.current = newArray;
+    };
 
     const processManipulations = () => {
         if (processingRef.current) return;
@@ -33,27 +39,23 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
             let delay = 400;
 
             if (instruction.type === 'append') {
-              setDisplayArray(prevArray => [...prevArray, instruction.value]);
+              const newArray = [...currentArrayRef.current, instruction.value];
+              updateArray(newArray);
             } else if (instruction.type === 'pop') {
-              setDisplayArray(prevArray => {
-                const newArray = [...prevArray];
-                newArray.pop();
-                return newArray;
-              });
+              const newArray = [...currentArrayRef.current];
+              newArray.pop();
+              updateArray(newArray);
             } else if (instruction.type === 'reverse') {
-                setDisplayArray(
-                    prevArray => {
-                        return [...prevArray].reverse()
-                    }
-                );
+                const newArray = [...currentArrayRef.current].reverse();
+                updateArray(newArray);
                 setReverseTrigger(prev => !prev);
             } else if (instruction.type === 'swap') {
                 const [i, j] = instruction.indices;
                 if (
                   i < 0 ||
                   j < 0 ||
-                  i >= displayArray.length ||
-                  j >= displayArray.length ||
+                  i >= currentArrayRef.current.length ||
+                  j >= currentArrayRef.current.length ||
                   i === j
                 ) {
                   alert('Invalid swap indices. Please provide two different indices within the array bounds.');
@@ -61,11 +63,9 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                 } else {
                   setSwappedIndices(instruction.indices);
                   setTimeout(() => {
-                    setDisplayArray(prevArray => {
-                      const newArray = [...prevArray];
-                      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-                      return newArray;
-                    });
+                    const newArray = [...currentArrayRef.current];
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                    updateArray(newArray);
                     setTimeout(() => {
                         setSwappedIndices(null);
                     }, 600);
@@ -74,21 +74,21 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                 }
             } else if (instruction.type === 'replace') {
                 const { index, value } = instruction;
-                if (index < 0 || index >= displayArray.length) {
+                if (index < 0 || index >= currentArrayRef.current.length) {
                     alert('Invalid replace index. Please provide an index within the array bounds.');
                     console.log('Invalid replace index:', index);
                 } else {
-                    setReplacedIndex(index);
-                    setDisplayArray(prevArray => {
-                        const newArray = [...prevArray];
-                        newArray[instruction.index] = value;
-                        return newArray;
-                    })
-                    delay = 600;
-                    setTimeout(() => {
-                    setReplacedIndex(null);
-                    }, 500);
+                  setReplacedIndex(index);
+                  const newArray = [...currentArrayRef.current];
+                  newArray[index] = value;
+                  updateArray(newArray);
+                  delay = 600;
+                  setTimeout(() => {
+                  setReplacedIndex(null);
+                  }, 500);
                 }
+            } else if (instruction.type === 'clear') {
+              updateArray([]);
             }
             currentIndex += 1;
             setTimeout(processNext, delay);
@@ -137,10 +137,10 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                 </motion.div>
             </div>
             <div className="bottom-group">
+              {isProcessing && <Loader />}
               <button onClick={processManipulations} className='manipulate-button vButton'>
                   Visualize
               </button>
-              {isProcessing && <Loader />}
             </div>
         </div>
     );

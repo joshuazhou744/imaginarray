@@ -24,9 +24,14 @@ export interface ReplaceManipulation<T> {
     value: T;
 }
 
+export interface ClearManipulation {
+    type: 'clear';
+}
+
 export type Manipulation<T> = 
     | AppendManipulation<T>
     | PopManipulation
     | ReverseManipulation
     | SwapManipulation
-    | ReplaceManipulation<T>;  
+    | ReplaceManipulation<T>
+    | ClearManipulation;

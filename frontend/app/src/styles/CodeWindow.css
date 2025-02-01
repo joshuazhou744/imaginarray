@@ -75,11 +75,15 @@
 }
 
 .vButton:hover {
-  /* Subtle shadow change on hover */
-  box-shadow: 
-    -3px -3px 8px rgba(255, 255, 255, 0.05),
-    3px 3px 8px rgba(0, 0, 0, 0.3);
-  transform: scale(0.99); /* Slight scale effect */
+  transform: scale(1.1);
+  box-shadow: 0 0 1em 0.45em rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #212121, #252525);
+  background: radial-gradient(
+    circle at bottom,
+    rgba(50, 100, 180, 0.5) 10%,
+    #212121 70%
+  );
+  outline: 0;
 }
 
 .vButton:active {
