@@ -1,3 +1,19 @@
+.CodeWindow {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  overflow: hidden;
+}
+
+.CodeMirror {
+  height: 80vh;
+  border-radius: 15px;
+  padding: 2vw 2vh;
+  margin: 2vh 2vw 0 2vw; /* top, right, bottom, left */
+}
+
+
 .vButton {
   cursor: pointer;
   padding: 1em;
@@ -14,6 +30,8 @@
   box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
   position: relative;
+  align-self: flex-end;
+  margin-right: 2vw;
 }
 
 .vButton:hover {
