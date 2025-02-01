@@ -1,46 +1,39 @@
-button {
-    width: 10em;
-    position: relative;
-    height: 3.5em;
-    border: 3px ridge #149CEA;
-    outline: none;
-    background-color: transparent;
-    color: white;
-    transition: 1s;
-    border-radius: 0.3em;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  button::after {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: 3%;
-    width: 95%;
-    height: 40%;
-    background-color: #212121;
-    transition: 0.5s;
-    transform-origin: center;
-  }
-  
-  button::before {
-    content: "";
-    transform-origin: center;
-    position: absolute;
-    top: 80%;
-    left: 3%;
-    width: 95%;
-    height: 40%;
-    background-color: #212121;
-    transition: 0.5s;
-  }
-  
-  button:hover::before, button:hover::after {
-    transform: scale(0)
-  }
-  
-  button:hover {
-    box-shadow: inset 0px 0px 25px #1479EA;
-  }
+.vButton {
+  cursor: pointer;
+  padding: 1em;
+  font-size: 1em;
+  width: 7em;
+  aspect-ratio: 1/0.25;
+  color: white;
+  background: #212121;
+  background-size: cover;
+  background-blend-mode: overlay;
+  border-radius: 0.5em;
+  outline: 0.1em solid #353535;
+  border: 0;
+  box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.vButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 1em 0.45em rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #212121, #252525);
+  background: radial-gradient(
+    circle at bottom,
+    rgba(50, 100, 180, 0.5) 10%,
+    #212121 70%
+  );
+  outline: 0;
+}
+
+.icon {
+  fill: white;
+  width: 1em;
+  aspect-ratio: 1;
+  top: 0;
+  left: 0;
+  margin: auto;
+  transform: translate(-35%, 10%);
+}

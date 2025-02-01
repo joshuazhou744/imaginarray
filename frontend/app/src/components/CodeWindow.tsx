@@ -15,7 +15,7 @@ export default function CodeWindow() {
             <CodeMirror
               options={options}
             />
-            <button>
+            <button className="vButton">
                 Visualize
             </button>
 
