@@ -1,8 +1,10 @@
+/* App.css */
+
 html, body {
-  margin: 0; /* Remove any default margins */
-  padding: 0; /* Remove any default padding */
-  overflow: hidden; /* Prevent scrolling */
-  position: fixed; /* Fix body to viewport */
+  margin: 0;
+  padding: 0; 
+  overflow: hidden;
+  position: fixed; 
   width: 100%;
   height: 100%;
   background-color: #242a38;
@@ -27,4 +29,8 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  h2 {
+    color: white;
+  }
 }
