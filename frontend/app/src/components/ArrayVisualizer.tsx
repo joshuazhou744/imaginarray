@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Manipulation } from '../utils/manipulateTypes';
 import { arrayItemVariants } from '../animations/arrayItemVariants';
+import Loader from './Loader';
 import "../styles/ArrayVisualizer.css";
 
 
@@ -14,6 +15,7 @@ interface ArrayVisualizerProps<T> {
 const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerProps<T>): JSX.Element => {
     const [displayArray, setDisplayArray] = useState<T[]>(initialArray);
     const processingRef = useRef(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [reverseTrigger, setReverseTrigger] = useState(false);
     const [swappedIndices, setSwappedIndices] = useState<[number, number] | null>(null);
     const [replacedIndex, setReplacedIndex] = useState<number | null>(null);
@@ -21,6 +23,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
     const processManipulations = () => {
         if (processingRef.current) return;
         processingRef.current = true;
+        setIsProcessing(true);
     
         let currentIndex = 0;
     
@@ -91,6 +94,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
             setTimeout(processNext, delay);
           } else {
             processingRef.current = false;
+            setIsProcessing(false);
           }
         };
     
@@ -132,9 +136,12 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                     </AnimatePresence>
                 </motion.div>
             </div>
-            <button onClick={processManipulations} className='manipulate-button'>
-                manipulate
-            </button>
+            <div className="bottom-group">
+              <button onClick={processManipulations} className='manipulate-button vButton'>
+                  Visualize
+              </button>
+              {isProcessing && <Loader />}
+            </div>
         </div>
     );
 };

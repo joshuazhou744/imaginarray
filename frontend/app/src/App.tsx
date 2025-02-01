@@ -9,11 +9,12 @@ const App: FC = () => {
 
   const [initialArray, setInitialArray] = useState<number[]>([]);
   const [manipulations, setManipulations] = useState<Manipulation<unknown>[]>([]);
+  const [initialized, setInitialized] = useState(false);
 
   const parseCode = async (code: string) => {
     try {
       const lines = code.split("\n");
-      const response = await axios.post('http://172.30.145.175:4000/submit_code', {
+      const response = await axios.post('http://127.0.0.1:4000/submit_code', {
         code: lines,
       });
 
@@ -22,6 +23,7 @@ const App: FC = () => {
       console.log(response.data)
       console.log(initialArray)
       console.log(manipulations)
+      setInitialized(true);
     } catch (error) {
       console.error('DAMMIT ERROR :( :\n', error);
     }
@@ -33,8 +35,8 @@ const App: FC = () => {
         <CodeWindow parseCode={parseCode} />
       </div>
       <div className="right">
-        <h2>Array Manipulation Visualization</h2>
-        <ArrayVisualizer initialArray={initialArray} manipulations={manipulations}/>
+        <h2>ImagArray</h2>
+        {initialized && <ArrayVisualizer initialArray={initialArray} manipulations={manipulations}/>}
       </div>
     </div>
   );

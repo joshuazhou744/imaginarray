@@ -1,11 +1,11 @@
 /* ArrayVisualizer.css */
 
 .container {
-    display: 'flex';
-    flex-direction: 'column';
+    display: flex;
+    flex-direction: column;
     align-items: 'center';
-    justify-content: center;
     height: 100%;
+    width: 100%;
 }
 
 .perspective {
@@ -36,6 +36,33 @@
     margin-bottom: 10px;
 }
 
+.bottom-group {
+    display: flex;
+    align-items: center;
+}
+
 .manipulate-button {
-    margin: 20px 0 0 20px;
+    margin-left: 20px;
+    width: 100px;
+    height: 50px;
+}
+
+.vButton {
+    cursor: pointer;
+    padding: 1em;
+    font-size: 1em;
+    width: 7em;
+    aspect-ratio: 1/0.25;
+    color: white;
+    background: #212121;
+    background-size: cover;
+    background-blend-mode: overlay;
+    border-radius: 0.5em;
+    outline: 0.1em solid #353535;
+    border: 0;
+    box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    align-self: flex-end;
+    margin-right: 2vw;
 }
