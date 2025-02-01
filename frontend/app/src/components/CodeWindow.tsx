@@ -28,7 +28,7 @@ export default function CodeWindow({ parseCode }: CodeWindowProps) {
               onChange={(_editor, _data, value) => setCode(value)}
             />
             <button className="vButton" onClick={() => parseCode(code)}>
-                Visualize
+                Compile
             </button>
 
         </div>

@@ -19,8 +19,8 @@ def submit_code():
     manipulations = [
         { 'type': 'append', 'value': 2 },
         { 'type': 'append', 'value': 3 },
-        { 'type': 'swap', 'indices': [0, 1] },
-        { 'type': 'replace', 'index': 0, 'value': 6 },
+        { 'type': 'swap', 'indices': [0, 2] },
+        { 'type': 'replace', 'index': 0, 'value': 4 },
   ] ;
     final_arr = None
     
