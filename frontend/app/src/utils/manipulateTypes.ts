@@ -18,8 +18,15 @@ export interface ReverseManipulation {
     type: 'reverse';
 }
 
+export interface ReplaceManipulation<T> {
+    type: 'replace';
+    index: number;
+    value: T;
+}
+
 export type Manipulation<T> = 
     | AppendManipulation<T>
     | PopManipulation
     | ReverseManipulation
-    | SwapManipulation;   
+    | SwapManipulation
+    | ReplaceManipulation<T>;  

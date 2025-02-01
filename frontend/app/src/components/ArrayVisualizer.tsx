@@ -16,6 +16,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
     const processingRef = useRef(false);
     const [reverseTrigger, setReverseTrigger] = useState(false);
     const [swappedIndices, setSwappedIndices] = useState<[number, number] | null>(null);
+    const [replacedIndex, setReplacedIndex] = useState<number | null>(null);
 
     const processManipulations = () => {
         if (processingRef.current) return;
@@ -26,6 +27,8 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
         const processNext = () => {
           if (currentIndex < manipulations.length) {
             const instruction = manipulations[currentIndex];
+            let delay = 400;
+
             if (instruction.type === 'append') {
               setDisplayArray(prevArray => [...prevArray, instruction.value]);
             } else if (instruction.type === 'pop') {
@@ -61,13 +64,31 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                       return newArray;
                     });
                     setTimeout(() => {
-                      setSwappedIndices(null);
-                    }, 500);
+                        setSwappedIndices(null);
+                    }, 600);
                   }, 100);
+                  delay = 1000;
                 }
-              }
+            } else if (instruction.type === 'replace') {
+                const { index, value } = instruction;
+                if (index < 0 || index >= displayArray.length) {
+                    alert('Invalid replace index. Please provide an index within the array bounds.');
+                    console.log('Invalid replace index:', index);
+                } else {
+                    setReplacedIndex(index);
+                    setDisplayArray(prevArray => {
+                        const newArray = [...prevArray];
+                        newArray[instruction.index] = value;
+                        return newArray;
+                    })
+                    delay = 600;
+                    setTimeout(() => {
+                    setReplacedIndex(null);
+                    }, 500);
+                }
+            }
             currentIndex += 1;
-            setTimeout(processNext, 400);
+            setTimeout(processNext, delay);
           } else {
             processingRef.current = false;
           }
@@ -89,6 +110,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                     <AnimatePresence>
                         {displayArray.map((item, index) => {
                             const isSwapped = swappedIndices !== null && (swappedIndices[0] === index || swappedIndices[1] === index);
+                            const isReplaced = replacedIndex === index;
                             return (
                                 <motion.div
                                     key={index}
@@ -96,7 +118,10 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                                     variants={arrayItemVariants}
                                     initial="initial"
                                     exit="exit"
-                                    animate={isSwapped ? { opacity: 1, y: 0, scale: [1, 1.2, 1] } : "animate"}
+                                    animate={
+                                    isSwapped || isReplaced 
+                                        ? { opacity: 1, y: 0, scale: [1, 1.2, 1] } 
+                                        : "animate"}
                                     transition={{ duration: 0.5 }}
                                     className="array-item"
                                     >
