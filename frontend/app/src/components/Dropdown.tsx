@@ -1,36 +1,124 @@
-import React from 'react';
+import "../styles/Dropdown.css";
 
 interface DropdownProps {
-  setCode: React.Dispatch<React.SetStateAction<string>>; // Set the type for setCode function
+  handlePreset: (preset: string) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ setCode }) => {
-  const algo = ['Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort'];
+const Dropdown: React.FC<DropdownProps> = ({ handlePreset }) => {
+  const options = ["Bubble Sort", "Insertion Sort", "Selection Sort", "Quick Sort", "Reverse Bubble Sort"];
 
   const algoCode: { [key: string]: string } = {
-    'Bubble Sort': `# Bubble Sort Algorithm in Python\n\ndef bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr\n\narr = [64, 34, 25, 12, 22, 11, 90]\nbubble_sort(arr)`,
-    'Insertion Sort': `# Insertion Sort Algorithm in Python\n\ndef insertion_sort(arr):\n    for i in range(1, len(arr)):\n        key = arr[i]\n        j = i-1\n        while j >= 0 and key < arr[j]:\n            arr[j+1] = arr[j]\n            j -= 1\n        arr[j+1] = key\n    return arr\n\narr = [64, 34, 25, 12, 22, 11, 90]\ninsertion_sort(arr)`,
-    'Selection Sort': `# Selection Sort Algorithm in Python\n\ndef selection_sort(arr):\n    for i in range(len(arr)): \n        min_idx = i\n        for j in range(i+1, len(arr)):\n            if arr[j] < arr[min_idx]:\n                min_idx = j\n        arr[i], arr[min_idx] = arr[min_idx], arr[i]\n    return arr\n\narr = [64, 34, 25, 12, 22, 11, 90]\nselection_sort(arr)`,
-    'Quick Sort': `# Quick Sort Algorithm in Python\n\ndef quick_sort(arr):\n    if len(arr) <= 1:\n        return arr\n    pivot = arr[len(arr) // 2]\n    left = [x for x in arr if x < pivot]\n    middle = [x for x in arr if x == pivot]\n    right = [x for x in arr if x > pivot]\n    return quick_sort(left) + middle + quick_sort(right)\n\narr = [64, 34, 25, 12, 22, 11, 90]\nquick_sort(arr)`
+    "Bubble Sort": `# Bubble Sort Algorithm in Python
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+
+# Fill in the array with your own values
+arr = []
+bubble_sort(arr)`,
+    "Insertion Sort": `# Insertion Sort Algorithm in Python
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i-1
+        while j >= 0 and key < arr[j]:
+            arr[j+1] = arr[j]
+            j -= 1
+        arr[j+1] = key
+    return arr
+
+# Fill in the array with your own values
+arr = []
+insertion_sort(arr)`,
+    "Selection Sort": `# Selection Sort Algorithm in Python
+def selection_sort(arr):
+    for i in range(len(arr)):
+        min_idx = i
+        for j in range(i+1, len(arr)):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+# Fill in the array with your own values
+arr = []
+selection_sort(arr)`,
+    "Quick Sort": `# Quick Sort Algorithm in Python
+def partition(arr, low, high):
+    
+    # Choose the pivot
+    pivot = arr[high]
+    
+    # Index of smaller element and indicates 
+    # the right position of pivot found so far
+    i = low - 1
+    
+    # Traverse arr[low..high] and move all smaller
+    # elements to the left side. Elements from low to 
+    # i are smaller after every iteration
+    for j in range(low, high):
+        if arr[j] < pivot:
+            i += 1
+            swap(arr, i, j)
+    
+    # Move pivot after smaller elements and
+    # return its position
+    swap(arr, i + 1, high)
+    return i + 1
+
+# Swap function
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
+
+# The QuickSort function implementation
+def quickSort(arr, low, high):
+    if low < high:
+        
+        # pi is the partition return index of pivot
+        pi = partition(arr, low, high)
+        
+        # Recursion calls for smaller elements
+        # and greater or equals elements
+        quickSort(arr, low, pi - 1)
+        quickSort(arr, pi + 1, high)
+# Fill in the array with your own values
+arr = []
+quickSort(arr, 0, len(arr)-1)`,
+"Reverse Bubble Sort": `# Reverse Bubble Sort Algorithm in Python
+def reverse_bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        swapped = False
+        for j in range(n - i - 1):
+            if arr[j] < arr[j + 1]:  # Swap if the current element is smaller than the next
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        if not swapped:
+            break  # Optimization: stop if no swaps occurred in the last pass
+    arr.reverse()
+
+# Fill in the array with your own values
+arr = []
+reverse_bubble_sort(arr)`
   };
 
-  // Update the code based on the selected algorithm
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedAlgo = event.target.value;
-    setCode(algoCode[selectedAlgo] || ''); // Update code state with selected algorithm's code
+  const handleSelect = (algoName: string) => {
+    handlePreset(algoCode[algoName] || "");
   };
 
   return (
-    <div>
-      <label htmlFor="algorithm-dropdown">Select an Algorithm:</label>
-      <select id="algorithm-dropdown" onChange={handleChange}>
-        <option value="">--Choose an algorithm--</option>
-        {algo.map((algorithm, index) => (
-          <option key={index} value={algorithm}>
-            {algorithm}
-          </option>
+    <div className="paste-button">
+      <button className="button">Preset Algorithms ▼</button>
+      <div className="dropdown-content">
+        {options.map((option, index) => (
+          <a key={index} onClick={() => handleSelect(option)} href="#">
+            {option}
+          </a>
         ))}
-      </select>
+      </div>
     </div>
   );
 };

@@ -1,74 +1,67 @@
-.dropdown {
+.paste-button {
   position: relative;
-  top: 50px;
-  margin: 0 auto;
-  width: 220px;
-  border: 1px solid #666;
-  background: #475154;
+  display: block;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 7px 7px 7px 7px;
 }
 
-.dropdown__text {
-  color: white;
-  padding: 10px 16px;
+.button {
+  background-color: #4CAF50;
+  color: #212121;
+  padding: 8px 8px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid transparent;
+  border-radius: 15px;
   cursor: pointer;
-  height: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  border-radius: 7px 7px 7px 7px;
 }
 
-.dropdown__text:hover {
-  color: white;
-  background: #475154;
-}
-
-.dropdown__text:after {
-  content: "";
-  transition: all 0.3s;
-  border: solid #ccc;
-  border-width: 0 1px 1px 0;
-  float: right;
-  margin-top: 8px;
-  margin-right: 6px;
-  padding: 5px;
-  transform: rotate(-135deg);
-}
-
-.dropdown.active .dropdown__text:after {
-  margin-top: 1px;
-  transform: rotate(45deg);
-}
-
-.dropdown__items {
+.dropdown-content {
+  display: none;
+  font-size: 13px;
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  visibility: hidden;
-  opacity: 0;
-  max-height: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  background: #475154;
-  border-top: 1px solid #666;
-  overflow: hidden;
+  z-index: 1;
+  min-width: 200px;
+  background-color: #212121;
+  border: 2px solid #4CAF50;
+  border-radius: 0px 15px 15px 15px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
-.dropdown.active .dropdown__items {
-  visibility: visible;
-  opacity: 1;
-  max-height: 290px;
+.dropdown-content a {
+  color: #4CAF50;
+  padding: 8px 10px;
+  text-decoration: none;
+  display: block;
+  transition: 0.1s;
+  border-radius: 1px 7px 7px 7px;
 }
 
-.dropdown__item {
-  cursor: pointer;
-  padding: 10px 18px;
-  color: white;
+.dropdown-content a:hover {
+  background-color: #4CAF50;
+  color: #212121;
+  border-radius: 1px 7px 7px 7px;
 }
 
-.dropdown__item:not(:last-child) {
-  border-bottom: 1px solid #666;
+.dropdown-content a:focus {
+  background-color: #4CAF50;
+  color:#212121;
+  border-radius: 1px 7px 7px 7px;
 }
 
-.dropdown__item:hover {
-  background: #3a4143;
+.dropdown-content #top:hover {
+  border-radius: 0px 13px 0px 0px;
+}
+
+.dropdown-content #bottom:hover {
+  border-radius: 0px 0px 13px 13px;
+}
+
+.paste-button:hover button {
+  border-radius: 7px 7px 0 0;
+}
+
+.paste-button:hover .dropdown-content {
+  display: block;
 }

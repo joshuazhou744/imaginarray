@@ -1,17 +1,22 @@
-import { Controlled as CodeMirror } from "react-codemirror2";
+import { UnControlled as CodeMirror } from "react-codemirror2";
+import { Editor } from 'codemirror';
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/python/python";
 import "codemirror/theme/oceanic-next.css";
 import "../styles/CodeWindow.css";
-import { FC } from "react";
+import { useRef, useEffect } from "react";
 
 interface CodeWindowProps {
   parseCode: (code: string) => void;
   highlightedLine: number | null;
   code: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CodeWindow: FC<CodeWindowProps> = ({ parseCode, highlightedLine, code }) => {
+export default function CodeWindow({ parseCode, highlightedLine, code }: CodeWindowProps) {
+  const editorRef = useRef<Editor | null>(null);
+  const prevHighlightRef = useRef<number | null>(null);
+
   const options = {
     lineNumbers: true,
     lineWrapping: true,
@@ -19,23 +24,46 @@ const CodeWindow: FC<CodeWindowProps> = ({ parseCode, highlightedLine, code }) =
     theme: "oceanic-next",
   };
 
+  useEffect(() => {
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      const currentLineCount = editor.lineCount();
+
+      if (
+        prevHighlightRef.current !== null &&
+        prevHighlightRef.current <= currentLineCount
+      ) {
+        editor.removeLineClass(prevHighlightRef.current - 1, "background", "highlight-line");
+      }
+
+      if (highlightedLine !== null && highlightedLine <= currentLineCount) {
+        console.log("ADDED")
+        editor.addLineClass(highlightedLine - 1, "background", "highlight-line");
+      }
+
+      prevHighlightRef.current = highlightedLine;
+    }
+  }, [highlightedLine]);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.setValue(code);
+      console.log(editorRef.current.getValue())
+    }
+  }, [code])
+
   return (
     <div className="CodeWindow">
       <CodeMirror
-        value={code}
         options={options}
-        onBeforeChange={(editor, data, value) => {
-          // You can handle changes here if you want a two-way binding.
-        }}
+        editorDidMount={(editor) => (editorRef.current = editor)}
       />
-      <button
-        className="vButton"
-        onClick={() => parseCode(code)}
+      <button 
+        className="vButton" 
+        onClick={() => parseCode(editorRef.current?.getValue() || "")}
       >
         Compile
       </button>
     </div>
   );
-};
-
-export default CodeWindow;
+}

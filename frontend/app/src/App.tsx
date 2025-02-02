@@ -4,7 +4,7 @@ import { Manipulation } from "./utils/manipulateTypes";
 import CodeWindow from './components/CodeWindow';
 import axios from 'axios';
 import './styles/App.css';
-import Dropdown from './components/Dropdown';  // Import Dropdown component
+import Dropdown from './components/Dropdown';
 
 const App: FC = () => {
   const [initialArray, setInitialArray] = useState<number[]>([]);
@@ -12,7 +12,7 @@ const App: FC = () => {
   const [lineNums, setLineNums] = useState<number[]>([]);
   const [initialized, setInitialized] = useState(false);
   const [highlightedLine, setHighlightedLine] = useState<number | null>(null);
-  const [code, setCode] = useState<string>(''); // Add state for code
+  const [code, setCode] = useState<string>('');
 
   const parseCode = async (code: string) => {
     setInitialized(false);
@@ -29,21 +29,26 @@ const App: FC = () => {
       console.log("RESPONSE:", response.data);
       setInitialized(true);
       setHighlightedLine(null);
-
     } catch (error) {
       console.error('DAMMIT ERROR :( :\n', error);
     }
   };
 
+  const handlePreset = (preset: string) => {
+    setCode(preset)
+  }
+
   return (
     <div className="split-screen-container">
       <div className="left">
-        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} />
+        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} setCode={setCode} />
       </div>
       <div className="right">
         <div className="visualizer-header">
-          <Dropdown setCode={setCode} /> {/* Pass setCode to Dropdown */}
           <h2>ImagArray</h2>
+        </div>
+        <div className="dropdown-container">
+          <Dropdown handlePreset={handlePreset} />
         </div>
 
         {initialized && (

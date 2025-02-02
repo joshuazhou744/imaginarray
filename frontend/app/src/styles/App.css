@@ -25,10 +25,10 @@ html, body {
 }
 
 .left {
-  /* border-right: 2px solid red; */
   padding-right: 2vw;
 }
 .right {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,4 +53,11 @@ button {
 .visualizer-header {
   display: flex;
   flex-direction: row;
+}
+
+.dropdown-container {
+  position: absolute;
+  top:0;
+  left: 0;
+  margin: 15px 20px;
 }
