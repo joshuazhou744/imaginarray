@@ -2,9 +2,18 @@
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from watcher import run_user_code  
+from watcher import run_user_code 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+frontend_url = os.getenv("FRONTEND_URL")
+print(frontend_url)
 
 app = Flask(__name__)
+
 
 
 CORS(app, origins="http://localhost:5173", supports_credentials=True)

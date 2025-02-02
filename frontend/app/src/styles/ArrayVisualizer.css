@@ -55,11 +55,11 @@
 }
 
 .bottom-group {
-    display: flex;
-    height: 100%;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin-bottom: 3vh;
+  display: flex;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-bottom: 3vh;
 }
 
 .manipulate-button {

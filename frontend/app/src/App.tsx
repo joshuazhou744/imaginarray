@@ -15,12 +15,15 @@ const App: FC = () => {
   const [code, setCode] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+  console.log(SERVER_URL)
+
   const parseCode = async (code: string) => {
     setInitialized(false);
     setInitialArray(initialArray);
     try {
       const lines = code.split("\n");
-      const response = await axios.post('http://127.0.0.1:4000/submit_code', {
+      const response = await axios.post(`${SERVER_URL}/submit_code`, {
         code: lines,
       });
 
