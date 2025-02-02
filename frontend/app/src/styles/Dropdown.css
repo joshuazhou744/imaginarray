@@ -2,19 +2,24 @@
   position: relative;
   display: block;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  border-radius: 7px 7px 7px 7px;
+  border-radius: 7px;
 }
 
 .button {
-  background-color: #4CAF50;
-  color: #212121;
+  background-color: rgba(128, 0, 255, 0.3); /* Deep purple with transparency */
+  color: #ffffff; /* White text for contrast */
   padding: 8px 8px;
   font-size: 15px;
   font-weight: bold;
   border: 2px solid transparent;
-  border-radius: 15px;
+  border-radius: 7px;
   cursor: pointer;
-  border-radius: 7px 7px 7px 7px;
+  transition: 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: rgba(128, 0, 255, 0.5); /* Slightly darker purple on hover */
+  border-color: rgba(128, 0, 255, 0.6); /* Accent border on hover */
 }
 
 .dropdown-content {
@@ -23,14 +28,14 @@
   position: absolute;
   z-index: 1;
   min-width: 200px;
-  background-color: #212121;
-  border: 2px solid #4CAF50;
+  background-color: #ffffffac; /* Dark background for dropdown */
+  border: 2px solid rgba(128, 0, 255, 0.3); /* Deep purple border */
   border-radius: 0px 15px 15px 15px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-content a {
-  color: #4CAF50;
+  color: rgba(128, 0, 255, 0.3); /* Deep purple text */
   padding: 8px 10px;
   text-decoration: none;
   display: block;
@@ -39,15 +44,13 @@
 }
 
 .dropdown-content a:hover {
-  background-color: #4CAF50;
-  color: #212121;
-  border-radius: 1px 7px 7px 7px;
+  background-color: rgba(128, 0, 255, 0.3); /* Purple hover background */
+  color: #212121; /* Dark text on hover */
 }
 
 .dropdown-content a:focus {
-  background-color: #4CAF50;
-  color:#212121;
-  border-radius: 1px 7px 7px 7px;
+  background-color: #a600ff; /* Solid purple when focused */
+  color: #212121;
 }
 
 .dropdown-content #top:hover {
