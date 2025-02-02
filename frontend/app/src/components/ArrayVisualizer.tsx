@@ -202,9 +202,9 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
             })}
           </AnimatePresence>
         </motion.div>
-      </div>
-      <div className="variables">
-        <Variables variables={variables}/>
+        <div className="variables">
+          <Variables variables={variables}/>
+        </div>
       </div>
       <div className="bottom-group">
         {isProcessing && <Loader />}

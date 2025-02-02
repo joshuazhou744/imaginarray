@@ -1,17 +1,22 @@
 /* ArrayVisualizer.css */
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: 'center';
-    justify-content: 'center';
-    height: 100%;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: 'center';
+  justify-content: 'center';
+  height: 100%;
+  width: 100%;
 }
 
 .perspective {
-    perspective: '1000px';
-    margin: 30px;
+  perspective: '1000px';
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .flip-container {
@@ -41,10 +46,12 @@
 }
 
 .variables {
-  max-height: 1000px;
+  position: absolute;
+  bottom: -30vh;
+  height: 100%;
   display: flex;
+  align-items: flex-end;
   justify-content: center;
-  align-items: center;
 }
 
 .bottom-group {

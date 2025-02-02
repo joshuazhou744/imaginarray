@@ -9,7 +9,7 @@ html, body {
   position: fixed; 
   width: 100%;
   height: 100%;
-  background-color: rgb(89, 89, 89);
+  background-color: #0e0e0e; 
   font-family: "Chakra Petch";
 }
 
@@ -26,12 +26,14 @@ html, body {
 
 .left {
   padding-right: 2vw;
+  border-right: 1px solid black;
 }
 .right {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-left: 1px solid black;
 
   h2 {
     margin-top: 50px;

@@ -30,11 +30,9 @@ export default function CodeWindow({ parseCode, highlightedLine, code, isProcess
       const editor = editorRef.current;
       const currentLineCount = editor.lineCount();
       if (highlightedLine !== null && highlightedLine <= currentLineCount) {
-        // Remove previous highlight if it exists
         if (prevHighlightRef.current !== null && prevHighlightRef.current <= currentLineCount) {
           editor.removeLineClass(prevHighlightRef.current - 1, "background", "highlight-line");
         }
-        // Add new highlight only if processing is active
         if (isProcessing) {
           editor.addLineClass(highlightedLine - 1, "background", "highlight-line");
           prevHighlightRef.current = highlightedLine;
