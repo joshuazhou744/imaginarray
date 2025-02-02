@@ -48,17 +48,17 @@
 }
 
 .manipulate-button {
-    width: 35vw;
-    margin: 0 2vw;
+    width: 50vw;
+    margin: 0.6vw 3vw;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 7vh;
     
-    background: #191a1b;
+    background: #C2BBF0;
     border: none;
     border-radius: 15px;
-    color: #d1d1d1;
+    color: black;
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: .2rem;

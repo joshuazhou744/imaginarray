@@ -1,89 +1,134 @@
-/* From Uiverse.io by JkHuger */ 
-/* Loader.css */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-.loader-container {
-  display: flex;
-  margin-left: 30px;
-  margin-bottom: -5px;
+html, body {
+  margin: 0;
+  padding: 0; 
+  overflow: hidden;
+  position: fixed; 
+  width: 100%;
+  height: 100%;
+  background-color: rgb(89, 89, 89);
+  font-family: "Chakra Petch";
 }
 
+.split-screen-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Make sure both panes fill full height */
+.left, .right {
+  height: 100%;
+}
+
+.left {
+  border-right: 2px solid black;
+  padding-right: 2vw;
+}
+
+.right {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;
+}
+
+/* Loader Container: Position at top center (adjust top and left as needed) */
+.loader-container {
+  position: absolute;
+  top: 500px;            /* Adjust distance from top */
+  left: 75%;             /* Adjust horizontal position */
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column; /* Stack loader and text vertically */
+  align-items: center;
+  margin: 0;
+}
+
+/* Loader: Add some margin-bottom to separate from text */
 .loader {
   position: relative;
-  margin-right: 20px;
-  transform: scale(0.3);
+  transform: scale(0.4);
+  margin-bottom: 30px;   /* Increased space between loader and text */
 }
 
+/* Loading text styling */
 h3 {
   color: white;
   text-align: center;
 }
 
-@keyframes loader_5191 {
-    from {
-      opacity: 0;
-    }
-  
-    to {
-      opacity: 1;
-    }
-  }
-  
-  .square {
-    background: #ddd;
-    width: 10px;
-    height: 10px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -5px;
-    margin-left: -5px;
-  }
-  
-  #sq1 {
-    margin-top: -25px;
-    margin-left: -25px;
-    animation: loader_5191 675ms ease-in-out 0s infinite alternate;
-  }
-  
-  #sq2 {
-    margin-top: -25px;
-    animation: loader_5191 675ms ease-in-out 75ms infinite alternate;
-  }
-  
-  #sq3 {
-    margin-top: -25px;
-    margin-left: 15px;
-    animation: loader_5191 675ms ease-in-out 150ms infinite;
-  }
-  
-  #sq4 {
-    margin-left: -25px;
-    animation: loader_5191 675ms ease-in-out 225ms infinite;
-  }
-  
-  #sq5 {
-    animation: loader_5191 675ms ease-in-out 300ms infinite;
-  }
-  
-  #sq6 {
-    margin-left: 15px;
-    animation: loader_5191 675ms ease-in-out 375ms infinite;
-  }
-  
-  #sq7 {
-    margin-top: 15px;
-    margin-left: -25px;
-    animation: loader_5191 675ms ease-in-out 450ms infinite;
-  }
-  
-  #sq8 {
-    margin-top: 15px;
-    animation: loader_5191 675ms ease-in-out 525ms infinite;
-  }
-  
-  #sq9 {
-    margin-top: 15px;
-    margin-left: 15px;
-    animation: loader_5191 675ms ease-in-out 600ms infinite;
-  }
+/* Keyframes and square definitions remain unchanged */
 
+@keyframes loader_5191 {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.square {
+  background: #ddd;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -5px;
+  margin-left: -5px;
+}
+
+#sq1 {
+  margin-top: -25px;
+  margin-left: -25px;
+  animation: loader_5191 675ms ease-in-out 0s infinite alternate;
+}
+
+#sq2 {
+  margin-top: -25px;
+  animation: loader_5191 675ms ease-in-out 75ms infinite alternate;
+}
+
+#sq3 {
+  margin-top: -25px;
+  margin-left: 15px;
+  animation: loader_5191 675ms ease-in-out 150ms infinite;
+}
+
+#sq4 {
+  margin-left: -25px;
+  animation: loader_5191 675ms ease-in-out 225ms infinite;
+}
+
+#sq5 {
+  animation: loader_5191 675ms ease-in-out 300ms infinite;
+}
+
+#sq6 {
+  margin-left: 15px;
+  animation: loader_5191 675ms ease-in-out 375ms infinite;
+}
+
+#sq7 {
+  margin-top: 15px;
+  margin-left: -25px;
+  animation: loader_5191 675ms ease-in-out 450ms infinite;
+}
+
+#sq8 {
+  margin-top: 15px;
+  animation: loader_5191 675ms ease-in-out 525ms infinite;
+}
+
+#sq9 {
+  margin-top: 15px;
+  margin-left: 15px;
+  animation: loader_5191 675ms ease-in-out 600ms infinite;
+}
+
+button {
+  font-family: "Chakra Petch";
+}
