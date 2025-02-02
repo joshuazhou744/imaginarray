@@ -198,9 +198,11 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
       </div>
       <div className="bottom-group">
         {isProcessing && <Loader />}
-        <button onClick={processManipulations} className='manipulate-button'>
-          Visualize
-        </button>
+        {displayItems.length > 0 && (
+          <button onClick={processManipulations} className='manipulate-button'>
+            Visualize
+          </button>
+        )}
       </div>
     </div>
   );
