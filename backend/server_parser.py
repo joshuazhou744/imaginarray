@@ -1,4 +1,5 @@
 # server_parser.py
+# *** BAD CODE DON'T TOUCH
 
 import ast
 import io
