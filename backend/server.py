@@ -32,7 +32,6 @@ def submit_code():
     })
 
 def clean_code(code):
-
     return [line for line in code if line.strip()]  
 
 if __name__ == "__main__":

@@ -44,12 +44,12 @@
     height: 100%;
     align-items: flex-end;
     justify-content: flex-end;
-    margin-bottom: 20px;
+    margin-bottom: 3vh;
 }
 
 .manipulate-button {
-    width: 50vw;
-    margin: -4px 4vw;
+    width: 35vw;
+    margin: 0 2vw;
     display: flex;
     justify-content: center;
     align-items: center;

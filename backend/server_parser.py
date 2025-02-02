@@ -217,12 +217,13 @@ class ArrayVisitor(ast.NodeVisitor):
                 idx2_left = self._extract_index(left_sub2.slice)
                 idx1_right = self._extract_index(right_sub1.slice)
                 idx2_right = self._extract_index(right_sub2.slice)
-                if idx1_left == idx1_right and idx2_left == idx2_right:
+                if idx1_left == idx2_right and idx2_left == idx1_right:
                     if idx1_left is not None and idx2_left is not None:
                         self.manipulations.append({
                             'type': 'swap',
                             'indices': [idx1_left, idx2_left]
                         })
+
 
     def _extract_index(self, node):
         if isinstance(node, ast.Constant):
@@ -245,15 +246,25 @@ class ArrayVisitor(ast.NodeVisitor):
         return None
     
     def _eval_condition(self, test_node):
-        # For simple condition: i > 0
         if (isinstance(test_node, ast.Compare) and
             len(test_node.ops) == 1 and
-            isinstance(test_node.ops[0], ast.Gt) and
             len(test_node.comparators) == 1):
             left_val = self._extract_value(test_node.left)
             right_val = self._extract_value(test_node.comparators[0])
+            op = test_node.ops[0]
             if isinstance(left_val, int) and isinstance(right_val, int):
-                return left_val > right_val
+                if isinstance(op, ast.Gt):
+                    return left_val > right_val
+                elif isinstance(op, ast.Lt):
+                    return left_val < right_val
+                elif isinstance(op, ast.GtE):
+                    return left_val >= right_val
+                elif isinstance(op, ast.LtE):
+                    return left_val <= right_val
+                elif isinstance(op, ast.Eq):
+                    return left_val == right_val
+                elif isinstance(op, ast.NotEq):
+                    return left_val != right_val
         return False
 
 
@@ -266,22 +277,49 @@ def parse_python_code(python_code: str):
 
 if __name__ == "__main__":
     code_example = """
-my_list = [1, 2, 3]
+try:
+    my_list = [10, 20, 30, 40]
 
-i = 5
-while i > 0:
-    my_list.append(i)
-    my_list.append(3)
-    i -= 1
+    i = 3
+    j = 0
 
-my_list.pop()
-my_list.remove(2)
-my_list[3] = 10
-del my_list[0]
-my_list.reverse()
-my_list[0], my_list[1] = my_list[1], my_list[0]
-print(my_list)
+    for k in range(2):
+        my_list.append(k)
+        i += 1
+        for m in range(1):
+            my_list.append(m + k)
+
+    while i > 0:
+        my_list.append(i)
+        i -= 2  # Augmented assignment (decrement by 2)
+
+    my_list[0], my_list[1] = my_list[1], my_list[0]
+
+    my_list[2] = 999
+
+    del my_list[j]  # delete element at index j (j is 0)
+
+    my_list.append(30)
+    my_list.remove(30)
+
+    if len(my_list) < 10:
+        my_list.clear()
+        for x in range(3):
+            my_list.append(x * 10)
+
+    my_list.reverse()
+
+    # A final swap using tuple assignment with variables as indices
+    a = 0
+    b = 1
+    my_list[a], my_list[b] = my_list[b], my_list[a]
+
+    # Print final list
+    print(my_list)
+except Exception as e:
+    print("ERROR", e)
 """
+
 
     init_arr, manips = parse_python_code(code_example)
     print(init_arr)
