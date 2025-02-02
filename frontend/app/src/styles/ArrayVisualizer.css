@@ -48,7 +48,7 @@
 }
 
 .manipulate-button {
-    width: 35vw;
+    width: 100%;
     margin: 0 2vw;
     display: flex;
     justify-content: center;

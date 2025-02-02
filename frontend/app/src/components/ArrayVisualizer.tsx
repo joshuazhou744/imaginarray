@@ -33,6 +33,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
     const [swappedIDs, setSwappedIDs] = useState<[string, string] | null>(null);
     const [replacedID, setReplacedID] = useState<string | null>(null);
     const [removedID, setRemovedID] = useState<string | null>(null);
+    const variables = {}
 
     const dynamicSize = Math.max(20, 80 - displayItems.length * 5);
 
@@ -141,6 +142,11 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                   updateItems(newItems);
                   setRemovedID(null);
                 }, 700);
+              }
+            } else if (instruction.type === 'variable') {
+              const { name, value } = instruction;
+              if (!variables[name]) {
+                variables[name] = value;
               }
             } else if (instruction.type === 'clear') {
               updateItems([]);
