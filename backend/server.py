@@ -16,17 +16,11 @@ def submit_code():
         print(line)  
 
     
-    final_arr, manipulations = run_user_code(code)
-
-
-    print("\n--- Array Manipulations ---")
-    for m in manipulations:
-        print(m)
-    print("--- End of Manipulations ---\n")
+    initial_arr, final_arr, manipulations = run_user_code(code)
 
     return jsonify({
         "message": "Analysis complete",
-        "initial_arr": [],  
+        "initial_arr": initial_arr,  
         "manipulations": manipulations,  
         "final_arr": final_arr,  
     })
