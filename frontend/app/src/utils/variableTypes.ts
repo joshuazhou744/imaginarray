@@ -1,0 +1,2 @@
+// variableTypes.ts
+

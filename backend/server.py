@@ -26,7 +26,7 @@ def submit_code():
 
     return jsonify({
         "message": "Analysis complete",
-        "initial_arr": [1, 2, 3, 4],  
+        "initial_arr": [],  
         "manipulations": manipulations,  
         "final_arr": final_arr,  
     })

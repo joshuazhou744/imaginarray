@@ -1,4 +1,7 @@
+// CodeWindow.tsx
+
 import { UnControlled as CodeMirror } from "react-codemirror2";
+import { Editor } from 'codemirror';
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/python/python";
 import "codemirror/theme/oceanic-next.css";
@@ -10,7 +13,7 @@ interface CodeWindowProps {
 }
 
 export default function CodeWindow({ parseCode }: CodeWindowProps) {
-    const editorRef = useRef<any>(null);
+    const editorRef = useRef<Editor | null>(null);
 
     const options = {
         lineNumbers: true,
@@ -27,7 +30,7 @@ export default function CodeWindow({ parseCode }: CodeWindowProps) {
             />
             <button 
                 className="vButton" 
-                onClick={() => parseCode(editorRef.current?.getValue() || "")} // get code on button click
+                onClick={() => parseCode(editorRef.current?.getValue() || "")}
             >
                 Compile
             </button>
