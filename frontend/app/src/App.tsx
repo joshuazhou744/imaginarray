@@ -4,14 +4,15 @@ import { Manipulation } from "./utils/manipulateTypes";
 import CodeWindow from './components/CodeWindow';
 import axios from 'axios';
 import './styles/App.css';
+import Dropdown from './components/Dropdown';  // Import Dropdown component
 
 const App: FC = () => {
   const [initialArray, setInitialArray] = useState<number[]>([]);
   const [manipulations, setManipulations] = useState<Manipulation<unknown>[]>([]);
   const [lineNums, setLineNums] = useState<number[]>([]);
   const [initialized, setInitialized] = useState(false);
-  // Create a state variable for the highlighted line
   const [highlightedLine, setHighlightedLine] = useState<number | null>(null);
+  const [code, setCode] = useState<string>(''); // Add state for code
 
   const parseCode = async (code: string) => {
     setInitialized(false);
@@ -22,9 +23,9 @@ const App: FC = () => {
         code: lines,
       });
 
-      setInitialArray(response.data.initial_arr || []); 
-      setManipulations(response.data.manipulations || []);  
-      setLineNums(response.data.line_nums || []);  
+      setInitialArray(response.data.initial_arr || []);
+      setManipulations(response.data.manipulations || []);
+      setLineNums(response.data.line_nums || []);
       console.log("RESPONSE:", response.data);
       setInitialized(true);
       setHighlightedLine(null);
@@ -37,10 +38,14 @@ const App: FC = () => {
   return (
     <div className="split-screen-container">
       <div className="left">
-        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} />
+        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} />
       </div>
       <div className="right">
-        <h2>ImagArray</h2>
+        <div className="visualizer-header">
+          <Dropdown setCode={setCode} /> {/* Pass setCode to Dropdown */}
+          <h2>ImagArray</h2>
+        </div>
+
         {initialized && (
           <ArrayVisualizer 
             initialArray={initialArray} 
