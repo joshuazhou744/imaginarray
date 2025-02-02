@@ -28,9 +28,20 @@ export interface ClearManipulation {
     type: 'clear';
 }
 
-export interface RemoveManipulation {
+export interface RemoveManipulation<T> {
     type: 'remove';
+    value: T;
+}
+
+export interface DeleteManipulation {
+    type: 'delete';
     index: number;
+}
+
+export interface VariableManipulation<T> {
+    type: 'variable';
+    name: string;
+    value: T;
 }
 
 
@@ -41,4 +52,6 @@ export type Manipulation<T> =
     | SwapManipulation
     | ReplaceManipulation<T>
     | ClearManipulation
-    | RemoveManipulation;
+    | RemoveManipulation<T>
+    | DeleteManipulation
+    | VariableManipulation<T>;

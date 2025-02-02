@@ -69,6 +69,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                 const newItems = [...currentItemsRef.current].reverse();
                 updateItems(newItems);
                 setReverseTrigger(prev => !prev);
+                delay = 1000;
             } else if (instruction.type === 'swap') {
                 const [i, j] = instruction.indices;
                 if (
@@ -111,6 +112,22 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                   }, 500);
                 }
             } else if (instruction.type === 'remove') {
+              const value = instruction.value;
+              const index = currentItemsRef.current.findIndex(item => item.value === value);
+              if (index === -1) {
+                alert('Value not found in array. Please provide a valid value to remove.');
+                console.log('Invalid remove value:', value);
+              } else {
+                const itemId = currentItemsRef.current[index].id;
+                setRemovedID(itemId);
+                delay = 2000;
+                setTimeout(() => {
+                  const newItems = currentItemsRef.current.filter(item => item.id !== itemId);
+                  updateItems(newItems);
+                  setRemovedID(null);
+                }, 700);
+              }
+            } else if (instruction.type === 'delete') {
               const index = instruction.index;
               if (index < 0 || index >= currentItemsRef.current.length) {
                 alert('Invalid remove index. Please provide an index within the array bounds.');
@@ -118,12 +135,12 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
               } else {
                 const itemId = currentItemsRef.current[index].id;
                 setRemovedID(itemId);
+                delay = 2000;
                 setTimeout(() => {
                   const newItems = currentItemsRef.current.filter(item => item.id !== itemId);
                   updateItems(newItems);
                   setRemovedID(null);
                 }, 700);
-                delay = 1000;
               }
             } else if (instruction.type === 'clear') {
               updateItems([]);
@@ -146,7 +163,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations }: ArrayVisualizerPro
                     animate={{
                         rotateY: reverseTrigger ? 360 : 0
                     }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.9 }}
                     className="flip-container"
                 >
                     <AnimatePresence>

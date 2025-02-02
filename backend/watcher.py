@@ -1,4 +1,6 @@
 import sys
+
+# allow for input code
 SAFE_BUILTINS = {
     "range": range,
     "len": len,
@@ -102,43 +104,66 @@ class TrackedVariable:
         })
 
 def normalize_indentation(code_lines):
-   
     if not code_lines:
         return code_lines
 
     min_indent = float("inf")
     for line in code_lines:
         stripped = line.lstrip()
-        if stripped: 
+        if stripped:
             indent_level = len(line) - len(stripped)
             min_indent = min(min_indent, indent_level)
 
     return [line[min_indent:] if line.strip() else line for line in code_lines]
 
+def extract_initial_array(code_lines):
+    initial_arr = []
+    arr_name = None
+
+    for line in code_lines:
+        if '=' in line and '[' in line and ']' in line:
+            try:
+                arr_name, arr = line.split("=", 1)
+                arr_name = arr_name.strip()
+                arr = arr.strip()
+                initial_arr = eval(arr)
+                if isinstance(initial_arr, list):
+                    break  # Stop when list found
+            except Exception:
+                pass 
+
+    return initial_arr, arr_name
+
+class TrackingDict(dict):
+    '''
+    intercept assignments to 'arr' and make them type TrackedList
+    '''
+    def __init__(self, manipulations, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.manipulations = manipulations
+
+    def __setitem__(self, key, value):
+        if key == 'arr' and not isinstance(value, TrackedList) and isinstance(value, list):
+            value = TrackedList(value, manipulations=self.manipulations)
+        super().__setitem__(key, value)
+
 def run_user_code(code_lines):
     manipulations = []
-    arr = TrackedList([], manipulations=manipulations)
 
-    SAFE_BUILTINS = {
-        "range": range,
-        "len": len,
-        "int": int,
-        "float": float,
-        "str": str,
-        "bool": bool,
-        "list": list
-    }
+    initial_arr, arr_name = extract_initial_array(code_lines)
+    print(f"Initial Array is: {initial_arr}")
 
-    exec_env = {
-        "arr": arr,
-        **SAFE_BUILTINS
-    }
+    arr = TrackedList(initial_arr, manipulations=manipulations)
+
+    # needed so all arrays are TrackingLists
+    exec_env = TrackingDict(manipulations, **SAFE_BUILTINS)
+    exec_env['arr'] = arr
 
     normalized_code = normalize_indentation(code_lines)
     full_code = "\n".join(normalized_code)
 
     try:
-        exec(full_code, {}, exec_env)  
+        exec(full_code, exec_env)
     except Exception as e:
         print(f"Error executing code:\n{full_code}\n{e}")
 
@@ -147,7 +172,11 @@ def run_user_code(code_lines):
         print(m)
     print("--- End of Manipulations ---\n")
 
-    return arr[:], manipulations
+    # Return the original initial array, the final state of 'arr', and the manipulations
+    final_arr = exec_env['arr']
+    return initial_arr, final_arr[:], manipulations
+
+# TEST
 if __name__ == "__main__":
     user_code = [
         "x = 0",
