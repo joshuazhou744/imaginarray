@@ -10,10 +10,8 @@ load_dotenv()
 
 
 frontend_url = os.getenv("FRONTEND_URL")
-print(frontend_url)
 
 app = Flask(__name__)
-
 
 
 CORS(app, origins=frontend_url, supports_credentials=True)
