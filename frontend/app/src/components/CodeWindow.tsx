@@ -1,36 +1,36 @@
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/python/python";
-import "../styles/CodeWindow.css";
 import "codemirror/theme/oceanic-next.css";
-import { useState } from "react";
+import "../styles/CodeWindow.css";
+import { useRef } from "react";
 
 interface CodeWindowProps {
     parseCode: (code: string) => void;
 }
 
 export default function CodeWindow({ parseCode }: CodeWindowProps) {
-    const [code, setCode] = useState("");
+    const editorRef = useRef<any>(null);
 
     const options = {
         lineNumbers: true,
         lineWrapping: true,
         mode: "python",
-        theme: "oceanic-next"
-        
-    }
-    
+        theme: "oceanic-next",
+    };
+
     return (
         <div className="CodeWindow">
             <CodeMirror
-              options={options}
-              value={code}
-              onChange={(_editor, _data, value) => setCode(value)}
+                options={options}
+                editorDidMount={(editor) => (editorRef.current = editor)} // ref to editor
             />
-            <button className="vButton" onClick={() => parseCode(code)}>
+            <button 
+                className="vButton" 
+                onClick={() => parseCode(editorRef.current?.getValue() || "")} // get code on button click
+            >
                 Compile
             </button>
-
         </div>
     );
 }
