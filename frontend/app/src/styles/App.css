@@ -63,3 +63,25 @@ button {
   left: 0;
   margin: 15px 20px;
 }
+
+.visualize-button,
+.compile-button {
+  width: 42.5vw;
+  height: 10vh;
+  border-radius: 15px;
+  font-size: 16px;
+  font-family: "Chakra Petch", sans-serif;
+  color: #d4d4d4;
+  background-color: #181818;
+  border: 1px solid #282828;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 
+    4px 4px 12px rgba(0, 0, 0, 0.6), 
+    -4px -4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.visualize_button:hover,
+.compile-button:hover {
+  transform: translateY(-2px);
+}
