@@ -34,7 +34,7 @@ export default function CodeWindow({ parseCode, highlightedLine, code, isProcess
         if (prevHighlightRef.current !== null && prevHighlightRef.current <= currentLineCount) {
           editor.removeLineClass(prevHighlightRef.current - 1, "background", "highlight-line");
         }
-        // Add new highlight only if processing is active
+        
         if (isProcessing) {
           editor.addLineClass(highlightedLine - 1, "background", "highlight-line");
           prevHighlightRef.current = highlightedLine;
@@ -68,7 +68,7 @@ export default function CodeWindow({ parseCode, highlightedLine, code, isProcess
         editorDidMount={(editor) => (editorRef.current = editor)}
       />
       <button 
-        className="vButton" 
+        className="compile-button" 
         onClick={() => {
           parseCode(editorRef.current?.getValue() || "");
           setIsProcessing(false)

@@ -1,63 +1,149 @@
 /* App.css */
+@layer base {
+  :root {
+    /* Color variables */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
 
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-html, body {
+body {
+  background: #0e0e0e; 
+  color: var(--foreground);
+  font-family: "Chakra Petch", sans-serif;
+  height: 100vh;
+  /* overflow: hidden; */
   margin: 0;
-  padding: 0; 
-  overflow: hidden;
-  position: fixed; 
-  width: 100%;
-  height: 100%;
-  background-color: rgb(89, 89, 89);
-  font-family: "Chakra Petch";
+  position: relative;
+}
+
+.homepage {
+  height:100vh;
+  display: flex;
+  flex-direction: column; 
+}
+.visualizer-header {
+  height: 15%;
 }
 
 .split-screen-container {
   display: grid;
   grid-template-columns: 50% 50%;
-  height: 100vh;
+  height: 85%;
   overflow: hidden;
+  gap: 0;
 }
 
-.left, .right {
+.left,
+.right {
   height: 100%;
 }
 
-.left {
-  padding-right: 2vw;
-}
 .right {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  h2 {
-    margin-top: 50px;
-    font-size: 50px;
-    color: rgba(255, 255, 255, 0.767);
-    text-align: center;
-
-    
-    text-shadow:
-      2px 2px 4px rgba(0, 0, 0, 0.4),
-      -2px -2px 4px rgba(255, 255, 255, 0.1);
-  }
+  position: relative;
 }
 
-button {
-  font-family: "Chakra Petch";
+h2 {
+  margin-top: 4vh;
+  font-size: 50px;
+  color: rgba(255, 255, 255, 0.77);
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4),
+               -2px -2px 4px rgba(255, 255, 255, 0.1);
 }
 
-.visualizer-header {
+.visualize-button,
+.compile-button {
+  width: 42.5vw;
+  height: 10vh;
+  border-radius: 15px;
+  
+  margin: 0 0 0 2vw;
+  font-size: 16px;
+  font-family: "Chakra Petch", sans-serif;
+  color: #d4d4d4;
+  background-color: #181818;
+  border: 1px solid #282828;
+  cursor: pointer;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 
+    4px 4px 12px rgba(0, 0, 0, 0.6), 
+    -4px -4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.visualize_button:hover,
+.compile-button:hover {
+  transform: translateY(-2px);
 }
 
 .dropdown-container {
   position: absolute;
-  top:0;
+  top: 0;
   left: 0;
   margin: 15px 20px;
+}
+
+.glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(128, 0, 255, 0.3) 0%, rgba(0, 0, 0, 0) 80%);
+  filter: blur(100px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease-out, height 0.5s ease-out;
+}
+
+@keyframes gradientMovement {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

@@ -1,9 +1,10 @@
-import { useState, useRef  } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Manipulation } from '../utils/manipulateTypes';
 import { arrayItemVariants } from '../animations/arrayItemVariants';
 import Loader from './Loader';
-import "../styles/ArrayVisualizer.css";
+import '../styles/ArrayVisualizer.css';
+import '../styles/App.css';
 import { v4 as uuidv4 } from 'uuid';
 import Variables from './Variables';
 
@@ -15,14 +16,20 @@ interface Item<T> {
 interface ArrayVisualizerProps<T> {
   initialArray: T[];
   manipulations: Manipulation<T>[];
-  lineNums: number[]; 
+  lineNums: number[];
   setHighlightedLine: (line: number | null) => void;
   isProcessing: boolean;
   setIsProcessing: (isProcessing: boolean) => void;
 }
 
-const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlightedLine, isProcessing, setIsProcessing }: ArrayVisualizerProps<T>): JSX.Element => {
-
+const ArrayVisualizer = <T,>({
+  initialArray,
+  manipulations,
+  lineNums,
+  setHighlightedLine,
+  isProcessing,
+  setIsProcessing,
+}: ArrayVisualizerProps<T>): JSX.Element => {
   const initialItems: Item<T>[] = initialArray.map((val) => ({
     id: uuidv4(),
     value: val,
@@ -75,7 +82,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
         } else if (instruction.type === 'reverse') {
           const newItems = [...currentItemsRef.current].reverse();
           updateItems(newItems);
-          setReverseTrigger(prev => !prev);
+          setReverseTrigger((prev) => !prev);
           delay = 1000;
         } else if (instruction.type === 'swap') {
           const [i, j] = instruction.indices;
@@ -118,7 +125,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
           }
         } else if (instruction.type === 'remove') {
           const value = instruction.value;
-          const index = currentItemsRef.current.findIndex(item => item.value === value);
+          const index = currentItemsRef.current.findIndex((item) => item.value === value);
           if (index === -1) {
             alert('Value not found in array. Please provide a valid value to remove.');
           } else {
@@ -126,7 +133,7 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
             setRemovedID(itemId);
             delay = 2000;
             setTimeout(() => {
-              const newItems = currentItemsRef.current.filter(item => item.id !== itemId);
+              const newItems = currentItemsRef.current.filter((item) => item.id !== itemId);
               updateItems(newItems);
               setRemovedID(null);
             }, 700);
@@ -140,14 +147,14 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
             setRemovedID(itemId);
             delay = 2000;
             setTimeout(() => {
-              const newItems = currentItemsRef.current.filter(item => item.id !== itemId);
+              const newItems = currentItemsRef.current.filter((item) => item.id !== itemId);
               updateItems(newItems);
               setRemovedID(null);
             }, 700);
           }
         } else if (instruction.type === 'variable') {
-          const { name, value } = instruction;;
-          setVariables(prev => ({ ...prev, [name]: value }));
+          const { name, value } = instruction;
+          setVariables((prev) => ({ ...prev, [name]: value }));
         } else if (instruction.type === 'clear') {
           updateItems([]);
         }
@@ -164,8 +171,14 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
   };
 
   return (
-    <div className='container'>
-      <div className='perspective'>
+    <div className="visualizer-container">
+      {isProcessing && (
+        <div className="loader-top-right">
+          <Loader />
+        </div>
+      )}
+
+      <div className="middle-group">
         <motion.div
           animate={{ rotateY: reverseTrigger ? 360 : 0 }}
           transition={{ duration: 0.9 }}
@@ -179,8 +192,8 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
               const animateProp = isRemoved
                 ? { opacity: 1, y: 0, scale: [1, 0.8, 0] }
                 : isSwapped || isReplaced
-                  ? { opacity: 1, y: 0, scale: [1, 1.2, 1] }
-                  : "animate";
+                ? { opacity: 1, y: 0, scale: [1, 1.2, 1] }
+                : 'animate';
               return (
                 <motion.div
                   key={item.id}
@@ -193,23 +206,22 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
                   className="array-item"
                   style={{
                     width: `${dynamicSize}px`,
-                    height: `${dynamicSize}px`
+                    height: `${dynamicSize}px`,
                   }}
                 >
                   {JSON.stringify(item.value)}
                 </motion.div>
-              )
+              );
             })}
           </AnimatePresence>
         </motion.div>
+
+        <Variables variables={variables} />
       </div>
-      <div className="variables">
-        <Variables variables={variables}/>
-      </div>
-      <div className="bottom-group">
-        {isProcessing && <Loader />}
+
+      <div className="visualize-button-container">
         {displayItems.length > 0 && !hasRun && (
-          <button onClick={processManipulations} className='manipulate-button'>
+          <button onClick={processManipulations} className="visualize-button">
             Visualize
           </button>
         )}

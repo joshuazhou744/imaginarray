@@ -40,30 +40,34 @@ const App: FC = () => {
   }
 
   return (
-    <div className="split-screen-container">
-      <div className="left">
-        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} isProcessing={isProcessing} setIsProcessing={setIsProcessing}/>
-      </div>
-      <div className="right">
-        <div className="visualizer-header">
+    <div className="homepage">
+      <div className="visualizer-header">
           <h2>ImagArray</h2>
-        </div>
-        <div className="dropdown-container">
-          <Dropdown handlePreset={handlePreset} />
+      </div>
+      <div className="split-screen-container">
+        <div className="left">
+          <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} isProcessing={isProcessing} setIsProcessing={setIsProcessing}/>
         </div>
 
-        {initialized && (
-          <ArrayVisualizer 
-            initialArray={initialArray} 
-            manipulations={manipulations} 
-            lineNums={lineNums}
-            setHighlightedLine={setHighlightedLine}
-            isProcessing={isProcessing}
-            setIsProcessing={setIsProcessing} 
-          />
-        )}
+        <div className="right">
+          <div className="dropdown-container">
+            <Dropdown handlePreset={handlePreset} />
+          </div>
+
+          {initialized && (
+            <ArrayVisualizer 
+              initialArray={initialArray} 
+              manipulations={manipulations} 
+              lineNums={lineNums}
+              setHighlightedLine={setHighlightedLine}
+              isProcessing={isProcessing}
+              setIsProcessing={setIsProcessing} 
+            />
+          )}
+        </div>
       </div>
     </div>
+
   );
 };
 

@@ -6,8 +6,8 @@
 }
 
 .button {
-  background-color: rgba(128, 0, 255, 0.3); /* Deep purple with transparency */
-  color: #ffffff; /* White text for contrast */
+  background-color: rgba(128, 0, 255, 0.3); 
+  color: #ffffff;
   padding: 8px 8px;
   font-size: 15px;
   font-weight: bold;
@@ -18,8 +18,8 @@
 }
 
 .button:hover {
-  background-color: rgba(128, 0, 255, 0.5); /* Slightly darker purple on hover */
-  border-color: rgba(128, 0, 255, 0.6); /* Accent border on hover */
+  background-color: rgba(128, 0, 255, 0.5);
+  border-color: rgba(128, 0, 255, 0.6);
 }
 
 .dropdown-content {
@@ -28,14 +28,14 @@
   position: absolute;
   z-index: 1;
   min-width: 200px;
-  background-color: #ffffffac; /* Dark background for dropdown */
-  border: 2px solid rgba(128, 0, 255, 0.3); /* Deep purple border */
+  background-color: #ffffffac;
+  border: 2px solid rgba(128, 0, 255, 0.3); 
   border-radius: 0px 15px 15px 15px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-content a {
-  color: rgba(128, 0, 255, 0.3); /* Deep purple text */
+  color: rgba(128, 0, 255, 0.3);
   padding: 8px 10px;
   text-decoration: none;
   display: block;
@@ -44,12 +44,12 @@
 }
 
 .dropdown-content a:hover {
-  background-color: rgba(128, 0, 255, 0.3); /* Purple hover background */
-  color: #212121; /* Dark text on hover */
+  background-color: rgba(128, 0, 255, 0.3);
+  color: #212121;
 }
 
 .dropdown-content a:focus {
-  background-color: #a600ff; /* Solid purple when focused */
+  background-color: #a600ff;
   color: #212121;
 }
 
