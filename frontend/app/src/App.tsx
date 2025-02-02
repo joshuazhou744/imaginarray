@@ -1,3 +1,5 @@
+// App.tsx
+
 import { FC, useState } from "react";
 import ArrayVisualizer from "./components/ArrayVisualizer";
 import { Manipulation } from "./utils/manipulateTypes";

@@ -67,37 +67,36 @@ class ArrayVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_For(self, node):
-        """
-        Handle simple for-loops of the form:
-            for i in range(N):
-                <body>
-        """
         if (isinstance(node.target, ast.Name) and
             isinstance(node.iter, ast.Call) and
             isinstance(node.iter.func, ast.Name) and
             node.iter.func.id == 'range' and
-            len(node.iter.args) == 1 and
-            isinstance(node.iter.args[0], ast.Constant)):
-
-            loop_var = node.target.id
-            iterations = node.iter.args[0].value
-
-            for i in range(iterations):
-                self.env[loop_var] = i
-
-                for stmt in node.body:
-                    self.visit(stmt)
+            len(node.iter.args) == 1):
             
-            if loop_var in self.env:
-                del self.env[loop_var]
+            # Evaluate the range expression
+            iterations = self._extract_value(node.iter.args[0])
+            if isinstance(iterations, int):
+                loop_var = node.target.id
+                for i in range(iterations):
+                    self.env[loop_var] = i
+                    # Record the variable each iteration
+                    self.manipulations.append({
+                        'type': 'variable',
+                        'name': loop_var,
+                        'value': i
+                    })
+                    for stmt in node.body:
+                        self.visit(stmt)
+                if loop_var in self.env:
+                    del self.env[loop_var]
+            else:
+                # If we can't evaluate the range expression to an int, fallback
+                self.generic_visit(node)
         else:
+            # If not a simple recognized for loop, fallback
             self.generic_visit(node)
     
     def visit_Expr(self, node):
-        """
-        Captures calls like my_list.append(2), my_list.pop(), my_list.remove(x),
-        my_list.clear(), etc.
-        """
         if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
             call = node.value
             method_name = call.func.attr
@@ -133,36 +132,20 @@ class ArrayVisitor(ast.NodeVisitor):
 
 
     def visit_While(self, node):
-        """
-        Simulate while loops with a simple condition, e.g.:
-            while i > 0:
-                ...
-        We'll repeatedly evaluate the condition, then visit the body.
-        """
         iteration_count = 0
-
-        # Evaluate condition
         while self._eval_condition(node.test):
             iteration_count += 1
             if iteration_count > self.max_iterations:
                 print("Warning: possible infinite loop detected, stopping.")
                 break
-
-            # Visit each statement in the loop body
             for stmt in node.body:
                 self.visit(stmt)
-
-        # Visit the 'else' part of the while loop, if present
         if node.orelse:
             for stmt in node.orelse:
                 self.visit(stmt)
 
+
     def visit_Delete(self, node):
-        """
-        Captures deletion statements like:
-            del my_list[i]
-        """
-        # The node.targets is a list of targets to delete.
         for target in node.targets:
             if (isinstance(target, ast.Subscript) and
                 isinstance(target.value, ast.Name) and
@@ -209,14 +192,24 @@ class ArrayVisitor(ast.NodeVisitor):
         if len(target_tuple.elts) == 2 and len(value_tuple.elts) == 2:
             left_sub1, left_sub2 = target_tuple.elts
             right_sub1, right_sub2 = value_tuple.elts
-            if (isinstance(left_sub1, ast.Subscript) and isinstance(left_sub1.value, ast.Name) and left_sub1.value.id == self.target_list_name and
-                isinstance(left_sub2, ast.Subscript) and isinstance(left_sub2.value, ast.Name) and left_sub2.value.id == self.target_list_name and
-                isinstance(right_sub1, ast.Subscript) and isinstance(right_sub1.value, ast.Name) and right_sub1.value.id == self.target_list_name and
-                isinstance(right_sub2, ast.Subscript) and isinstance(right_sub2.value, ast.Name) and right_sub2.value.id == self.target_list_name):
+            if (isinstance(left_sub1, ast.Subscript) and 
+                isinstance(left_sub1.value, ast.Name) and 
+                left_sub1.value.id == self.target_list_name and
+                isinstance(left_sub2, ast.Subscript) and 
+                isinstance(left_sub2.value, ast.Name) and 
+                left_sub2.value.id == self.target_list_name and
+                isinstance(right_sub1, ast.Subscript) and 
+                isinstance(right_sub1.value, ast.Name) and 
+                right_sub1.value.id == self.target_list_name and
+                isinstance(right_sub2, ast.Subscript) and 
+                isinstance(right_sub2.value, ast.Name) and 
+                right_sub2.value.id == self.target_list_name
+            ):
                 idx1_left = self._extract_index(left_sub1.slice)
                 idx2_left = self._extract_index(left_sub2.slice)
                 idx1_right = self._extract_index(right_sub1.slice)
                 idx2_right = self._extract_index(right_sub2.slice)
+                # For a swap: left[0] = right[1], left[1] = right[0]
                 if idx1_left == idx2_right and idx2_left == idx1_right:
                     if idx1_left is not None and idx2_left is not None:
                         self.manipulations.append({
@@ -226,23 +219,37 @@ class ArrayVisitor(ast.NodeVisitor):
 
 
     def _extract_index(self, node):
-        if isinstance(node, ast.Constant):
-            return node.value
-        elif hasattr(node, 'value') and isinstance(node.value, ast.Constant):
-            return node.value.value
-        elif isinstance(node, ast.Name):
-            if node.id in self.env:
-                return self.env[node.id]
-            return node.id
-        return None
+        return self._extract_value(node)
 
     def _extract_value(self, node):
         if isinstance(node, ast.Constant):
+            # e.g. a numeric literal
             return node.value
+
         elif isinstance(node, ast.Name):
+            # e.g. i
             if node.id in self.env:
                 return self.env[node.id]
-            return node.id
+            return node.id  # fallback
+
+        elif isinstance(node, ast.BinOp):
+            # e.g. i + j, i + 2, ...
+            left_val = self._extract_value(node.left)
+            right_val = self._extract_value(node.right)
+            if isinstance(left_val, int) and isinstance(right_val, int):
+                if isinstance(node.op, ast.Add):
+                    return left_val + right_val
+                elif isinstance(node.op, ast.Sub):
+                    return left_val - right_val
+                elif isinstance(node.op, ast.Mult):
+                    return left_val * right_val
+                elif isinstance(node.op, ast.Div):
+                    return left_val / right_val
+                elif isinstance(node.op, ast.FloorDiv):
+                    return left_val // right_val
+            return None
+
+        # For more complex expressions (e.g. function calls, etc.), fallback
         return None
     
     def _eval_condition(self, test_node):
@@ -277,47 +284,25 @@ def parse_python_code(python_code: str):
 
 if __name__ == "__main__":
     code_example = """
-try:
-    my_list = [10, 20, 30, 40]
+my_arr = [1, 2, 3]
+n = 2
 
-    i = 3
-    j = 0
+# Outer for loop
+for i in range(n):
+    my_arr.append(i)
+    for j in range(i + 2):
+        my_arr.append(i + j)
+        n += 1
 
-    for k in range(2):
-        my_list.append(k)
-        i += 1
-        for m in range(1):
-            my_list.append(m + k)
+# Another loop that modifies the list using subscript assignment
+for x in range(3):
+    my_arr[x] = my_arr[x] * 2
 
-    while i > 0:
-        my_list.append(i)
-        i -= 2  # Augmented assignment (decrement by 2)
+# A tuple assignment swap
+my_arr[1], my_arr[2] = my_arr[2], my_arr[1]
 
-    my_list[0], my_list[1] = my_list[1], my_list[0]
-
-    my_list[2] = 999
-
-    del my_list[j]  # delete element at index j (j is 0)
-
-    my_list.append(30)
-    my_list.remove(30)
-
-    if len(my_list) < 10:
-        my_list.clear()
-        for x in range(3):
-            my_list.append(x * 10)
-
-    my_list.reverse()
-
-    # A final swap using tuple assignment with variables as indices
-    a = 0
-    b = 1
-    my_list[a], my_list[b] = my_list[b], my_list[a]
-
-    # Print final list
-    print(my_list)
-except Exception as e:
-    print("ERROR", e)
+# Print final list
+print(my_arr)
 """
 
 
