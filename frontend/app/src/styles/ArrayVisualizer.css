@@ -25,7 +25,7 @@
 .array-item {
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 2px;
     background-color: #f0f0f0;
     backface-visibility: hidden;
     min-width: 25px;
@@ -34,6 +34,9 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
+    margin-right:3px;
+    margin-left: 3px;
+
 }
 
 .bottom-group {
@@ -45,14 +48,14 @@
 }
 
 .manipulate-button {
-    width: 35vw;
-    margin: 2px 2vw;
+    width: 50vw;
+    margin: -4px 4vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 5vh;
+    height: 7vh;
     
-    background: #2c3a4b;
+    background: #191a1b;
     border: none;
     border-radius: 15px;
     color: #d1d1d1;
@@ -64,8 +67,8 @@
     transition: .2s ease-in-out;
     
     box-shadow: 
-      -4px -4px 10px rgba(255, 255, 255, 0.05),
-      4px 4px 10px rgba(0, 0, 0, 0.3);
+    -3px -4px 10px rgba(255, 255, 255, 0.05),
+    4px 4px 10px rgba(0, 0, 0, 0.3);
   }
   
   .manipulate-button:hover {

@@ -117,7 +117,7 @@ def normalize_indentation(code_lines):
 
 def run_user_code(code_lines):
     manipulations = []
-    arr = TrackedList([1, 2, 3, 4], manipulations=manipulations)
+    arr = TrackedList([], manipulations=manipulations)
 
     SAFE_BUILTINS = {
         "range": range,
