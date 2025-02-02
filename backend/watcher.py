@@ -1,6 +1,4 @@
-
 import sys
-import re
 
 SAFE_BUILTINS = {
     "range": range,
@@ -16,107 +14,65 @@ class TrackedList(list):
     def __init__(self, *args, manipulations=None):
         super().__init__(*args)
         self._manipulations = manipulations if manipulations is not None else []
-
         self._last_setitem_call = None
+
+    def _record_manipulation(self, manipulation_type, **kwargs):
+        """Helper to record manipulation type, line number, and state"""
+        frame = sys._getframe(2)  # Get the caller's frame (2 levels up)
+        line_no = frame.f_lineno  # Extract the line number
+
+        kwargs.update({"type": manipulation_type, "line": line_no, "state": self[:]})
+        self._manipulations.append(kwargs)
 
     def append(self, value):
         super().append(value)
-        self._manipulations.append({
-            "type": "append",
-            "value": value,
-            "state": self[:]
-        })
+        self._record_manipulation("append", value=value)
 
     def pop(self, index=None):
         if index is None:
             index = len(self) - 1
         popped = super().pop(index)
-        self._manipulations.append({
-            "type": "pop",
-            "index": index,
-            "popped": popped,
-            "state": self[:]
-        })
+        self._record_manipulation("pop", index=index, popped=popped)
         return popped
 
     def __setitem__(self, index, value):
-    
-        old_value = None
-        if 0 <= index < len(self):
-            old_value = self[index]
+        old_value = self[index] if 0 <= index < len(self) else None
 
-       
         if self._last_setitem_call:
             last_index, last_old_value, last_new_value = self._last_setitem_call
- 
-            if (index != last_index and
-                old_value == last_new_value and
-                value == last_old_value):
-             
+            if (index != last_index and old_value == last_new_value and value == last_old_value):
                 super().__setitem__(index, value)
-            
+
                 if self._manipulations and self._manipulations[-1]["type"] == "replace":
                     self._manipulations.pop()
-            
-                self._manipulations.append({
-                    "type": "swap",
-                    "indices": [last_index, index],
-                    "state": self[:]
-                })
+
+                self._record_manipulation("swap", indices=[last_index, index])
                 self._last_setitem_call = None
                 return
 
         super().__setitem__(index, value)
-        self._manipulations.append({
-            "type": "replace",
-            "index": index,
-            "value": value,
-            "state": self[:]
-        })
-
+        self._record_manipulation("replace", index=index, value=value)
         self._last_setitem_call = (index, old_value, value)
 
     def insert(self, index, value):
         super().insert(index, value)
-        self._manipulations.append({
-            "type": "insert",
-            "index": index,
-            "value": value,
-            "state": self[:]
-        })
+        self._record_manipulation("insert", index=index, value=value)
 
     def remove(self, value):
         super().remove(value)
-        self._manipulations.append({
-            "type": "remove",
-            "value": value,
-            "state": self[:]
-        })
+        self._record_manipulation("remove", value=value)
 
     def extend(self, iterable):
         super().extend(iterable)
-        self._manipulations.append({
-            "type": "extend",
-            "value": list(iterable),
-            "state": self[:]
-        })
+        self._record_manipulation("extend", value=list(iterable))
 
     def reverse(self):
         super().reverse()
-        self._manipulations.append({
-            "type": "reverse",
-            "state": self[:]
-        })
+        self._record_manipulation("reverse")
 
     def sort(self, *args, **kwargs):
         super().sort(*args, **kwargs)
-        self._manipulations.append({
-            "type": "sort",
-            "args": args,
-            "kwargs": kwargs,
-            "state": self[:]
-        })
-
+        self._record_manipulation("sort", args=args, kwargs=kwargs)
 
 class TrackedVariable:
     def __init__(self, name, value, manipulations):
@@ -228,14 +184,17 @@ def run_user_code(code_lines):
     except Exception as e:
         print(f"Error executing code:\n{full_code}\n{e}")
 
-
-    print("\n--- Array Manipulations ---")
-    for m in manipulations:
-        print(m)
-    print("--- End of Manipulations ---\n")
+    # print("\n--- Array Manipulations ---")
+    # for m in manipulations:
+    #     print(m)
+    # print("--- End of Manipulations ---\n")
+    
+    line_nums = [m["line"] for m in manipulations]
 
     final_arr = exec_env["arr"]
-    return initial_arr, final_arr[:], manipulations
+    return initial_arr, final_arr[:], manipulations, line_nums
+
+
 
 
 if __name__ == "__main__":

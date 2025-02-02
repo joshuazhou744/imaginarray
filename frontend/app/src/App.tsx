@@ -6,10 +6,12 @@ import axios from 'axios';
 import './styles/App.css';
 
 const App: FC = () => {
-
   const [initialArray, setInitialArray] = useState<number[]>([]);
   const [manipulations, setManipulations] = useState<Manipulation<unknown>[]>([]);
+  const [lineNums, setLineNums] = useState<number[]>([]);
   const [initialized, setInitialized] = useState(false);
+  // Create a state variable for the highlighted line
+  const [highlightedLine, setHighlightedLine] = useState<number | null>(null);
 
   const parseCode = async (code: string) => {
     setInitialized(false);
@@ -22,10 +24,11 @@ const App: FC = () => {
 
       setInitialArray(response.data.initial_arr || []); 
       setManipulations(response.data.manipulations || []);  
-      console.log(response.data)
-      console.log(initialArray)
-      console.log(manipulations)
+      setLineNums(response.data.line_nums || []);  
+      console.log("RESPONSE:", response.data);
       setInitialized(true);
+      setHighlightedLine(null);
+
     } catch (error) {
       console.error('DAMMIT ERROR :( :\n', error);
     }
@@ -34,11 +37,18 @@ const App: FC = () => {
   return (
     <div className="split-screen-container">
       <div className="left">
-        <CodeWindow parseCode={parseCode} />
+        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} />
       </div>
       <div className="right">
         <h2>ImagArray</h2>
-        {initialized && <ArrayVisualizer initialArray={initialArray} manipulations={manipulations}/>}
+        {initialized && (
+          <ArrayVisualizer 
+            initialArray={initialArray} 
+            manipulations={manipulations} 
+            lineNums={lineNums}
+            setHighlightedLine={setHighlightedLine}
+          />
+        )}
       </div>
     </div>
   );
