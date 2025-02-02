@@ -10,10 +10,11 @@ interface CodeWindowProps {
   parseCode: (code: string) => void;
   highlightedLine: number | null;
   code: string;
-  setCode: React.Dispatch<React.SetStateAction<string>>;
+  isProcessing: boolean;
+  setIsProcessing: (isProcessing: boolean) => void;
 }
 
-export default function CodeWindow({ parseCode, highlightedLine, code }: CodeWindowProps) {
+export default function CodeWindow({ parseCode, highlightedLine, code, isProcessing, setIsProcessing }: CodeWindowProps) {
   const editorRef = useRef<Editor | null>(null);
   const prevHighlightRef = useRef<number | null>(null);
 
@@ -28,39 +29,50 @@ export default function CodeWindow({ parseCode, highlightedLine, code }: CodeWin
     if (editorRef.current) {
       const editor = editorRef.current;
       const currentLineCount = editor.lineCount();
-
-      if (
-        prevHighlightRef.current !== null &&
-        prevHighlightRef.current <= currentLineCount
-      ) {
-        editor.removeLineClass(prevHighlightRef.current - 1, "background", "highlight-line");
-      }
-
       if (highlightedLine !== null && highlightedLine <= currentLineCount) {
-        console.log("ADDED")
-        editor.addLineClass(highlightedLine - 1, "background", "highlight-line");
+        // Remove previous highlight if it exists
+        if (prevHighlightRef.current !== null && prevHighlightRef.current <= currentLineCount) {
+          editor.removeLineClass(prevHighlightRef.current - 1, "background", "highlight-line");
+        }
+        // Add new highlight only if processing is active
+        if (isProcessing) {
+          editor.addLineClass(highlightedLine - 1, "background", "highlight-line");
+          prevHighlightRef.current = highlightedLine;
+        }
       }
-
-      prevHighlightRef.current = highlightedLine;
     }
-  }, [highlightedLine]);
+  }, [highlightedLine, isProcessing]);
+
+  useEffect(() => {
+    if (editorRef.current && !isProcessing) {
+      const editor = editorRef.current;
+      const totalLines = editor.lineCount();
+      for (let i = 0; i < totalLines; i++) {
+        editor.removeLineClass(i, "background", "highlight-line");
+      }
+      prevHighlightRef.current = null;
+    }
+  }, [isProcessing]);
 
   useEffect(() => {
     if (editorRef.current) {
       editorRef.current.setValue(code);
-      console.log(editorRef.current.getValue())
     }
-  }, [code])
+  }, [code]);
 
   return (
     <div className="CodeWindow">
       <CodeMirror
+        value={code}
         options={options}
         editorDidMount={(editor) => (editorRef.current = editor)}
       />
       <button 
         className="vButton" 
-        onClick={() => parseCode(editorRef.current?.getValue() || "")}
+        onClick={() => {
+          parseCode(editorRef.current?.getValue() || "");
+          setIsProcessing(false)
+        }}
       >
         Compile
       </button>

@@ -13,10 +13,11 @@ const App: FC = () => {
   const [initialized, setInitialized] = useState(false);
   const [highlightedLine, setHighlightedLine] = useState<number | null>(null);
   const [code, setCode] = useState<string>('');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const parseCode = async (code: string) => {
     setInitialized(false);
-    setInitialArray([]);
+    setInitialArray(initialArray);
     try {
       const lines = code.split("\n");
       const response = await axios.post('http://127.0.0.1:4000/submit_code', {
@@ -41,7 +42,7 @@ const App: FC = () => {
   return (
     <div className="split-screen-container">
       <div className="left">
-        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} setCode={setCode} />
+        <CodeWindow parseCode={parseCode} highlightedLine={highlightedLine} code={code} isProcessing={isProcessing} setIsProcessing={setIsProcessing}/>
       </div>
       <div className="right">
         <div className="visualizer-header">
@@ -57,6 +58,8 @@ const App: FC = () => {
             manipulations={manipulations} 
             lineNums={lineNums}
             setHighlightedLine={setHighlightedLine}
+            isProcessing={isProcessing}
+            setIsProcessing={setIsProcessing} 
           />
         )}
       </div>

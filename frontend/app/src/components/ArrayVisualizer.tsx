@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Manipulation } from '../utils/manipulateTypes';
 import { arrayItemVariants } from '../animations/arrayItemVariants';
 import Loader from './Loader';
 import "../styles/ArrayVisualizer.css";
 import { v4 as uuidv4 } from 'uuid';
+import Variables from './Variables';
 
 interface Item<T> {
   id: string;
@@ -15,10 +16,12 @@ interface ArrayVisualizerProps<T> {
   initialArray: T[];
   manipulations: Manipulation<T>[];
   lineNums: number[]; 
-  setHighlightedLine: (line: number | null) => void;  // passed from App
+  setHighlightedLine: (line: number | null) => void;
+  isProcessing: boolean;
+  setIsProcessing: (isProcessing: boolean) => void;
 }
 
-const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlightedLine }: ArrayVisualizerProps<T>): JSX.Element => {
+const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlightedLine, isProcessing, setIsProcessing }: ArrayVisualizerProps<T>): JSX.Element => {
 
   const initialItems: Item<T>[] = initialArray.map((val) => ({
     id: uuidv4(),
@@ -28,11 +31,12 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
   const [displayItems, setDisplayItems] = useState<Item<T>[]>(initialItems);
   const currentItemsRef = useRef<Item<T>[]>(initialItems);
   const processingRef = useRef(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [reverseTrigger, setReverseTrigger] = useState(false);
   const [swappedIDs, setSwappedIDs] = useState<[string, string] | null>(null);
   const [replacedID, setReplacedID] = useState<string | null>(null);
   const [removedID, setRemovedID] = useState<string | null>(null);
+  const [hasRun, setHasRun] = useState(false);
+  const [variables, setVariables] = useState<{ [key: string]: unknown }>({});
 
   const dynamicSize = Math.max(20, 80 - displayItems.length * 5);
 
@@ -141,6 +145,9 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
               setRemovedID(null);
             }, 700);
           }
+        } else if (instruction.type === 'variable') {
+          const { name, value } = instruction;;
+          setVariables(prev => ({ ...prev, [name]: value }));
         } else if (instruction.type === 'clear') {
           updateItems([]);
         }
@@ -150,9 +157,9 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
         processingRef.current = false;
         setIsProcessing(false);
         setHighlightedLine(null); // remove highlight when done
+        setHasRun(true);
       }
     };
-
     processNext();
   };
 
@@ -196,9 +203,12 @@ const ArrayVisualizer = <T,>({ initialArray, manipulations, lineNums, setHighlig
           </AnimatePresence>
         </motion.div>
       </div>
+      <div className="variables">
+        <Variables variables={variables}/>
+      </div>
       <div className="bottom-group">
         {isProcessing && <Loader />}
-        {displayItems.length > 0 && (
+        {displayItems.length > 0 && !hasRun && (
           <button onClick={processManipulations} className='manipulate-button'>
             Visualize
           </button>
