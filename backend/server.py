@@ -21,7 +21,10 @@ def submit_code():
         { 'type': 'append', 'value': 3 },
         { 'type': 'swap', 'indices': [0, 2] },
         { 'type': 'replace', 'index': 0, 'value': 4 },
-        { 'type': 'remove', 'index': 1 }
+        { 'type': 'remove', 'value': 1 },
+        {'type':'reverse'},
+        {'type':'reverse'},
+        {'type':'reverse'}
   ] ;
     final_arr = None
     
