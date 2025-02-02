@@ -18,7 +18,6 @@ html, body {
   overflow: hidden;
 }
 
-/* Make sure both panes fill full height */
 .left, .right {
   height: 100%;
 }
@@ -30,36 +29,29 @@ html, body {
 
 .right {
   display: flex;
-  flex-direction: column; /* Stack children vertically */
   align-items: center;
 }
 
-/* Loader Container: Position at top center (adjust top and left as needed) */
 .loader-container {
   position: absolute;
-  top: 500px;            /* Adjust distance from top */
-  left: 75%;             /* Adjust horizontal position */
-  transform: translateX(-50%);
+  top:0;
   display: flex;
-  flex-direction: column; /* Stack loader and text vertically */
   align-items: center;
-  margin: 0;
+  justify-content: center;
+  gap: 20px;
+  margin-right: 20px;
 }
 
-/* Loader: Add some margin-bottom to separate from text */
 .loader {
   position: relative;
   transform: scale(0.4);
-  margin-bottom: 30px;   /* Increased space between loader and text */
 }
 
-/* Loading text styling */
 h3 {
   color: white;
   text-align: center;
 }
 
-/* Keyframes and square definitions remain unchanged */
 
 @keyframes loader_5191 {
   from {
