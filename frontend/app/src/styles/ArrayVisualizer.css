@@ -10,7 +10,7 @@
 
 .perspective {
     perspective: '1000px';
-    margin: 10px;
+    margin: 30px;
 }
 
 .flip-container {
@@ -28,8 +28,8 @@
     border-radius: 5px;
     background-color: #f0f0f0;
     backface-visibility: hidden;
-    width: 20px;
-    height: 20px;
+    min-width: 25px;
+    min-height: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,27 +45,39 @@
 }
 
 .manipulate-button {
-    margin-left: 20px;
-    width: 100px;
-    height: 50px;
-}
-
-.vButton {
+    width: 35vw;
+    margin: 2px 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    
+    background: #2c3a4b;
+    border: none;
+    border-radius: 15px;
+    color: #d1d1d1;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .2rem;
+    outline: none;
     cursor: pointer;
-    padding: 1em;
-    font-size: 1em;
-    width: 7em;
-    aspect-ratio: 1/0.25;
-    color: white;
-    background: #212121;
-    background-size: cover;
-    background-blend-mode: overlay;
-    border-radius: 0.5em;
-    outline: 0.1em solid #353535;
-    border: 0;
-    box-shadow: 0 0 1em 1em rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-    position: relative;
-    align-self: flex-end;
-    margin-right: 2vw;
-}
+    transition: .2s ease-in-out;
+    
+    box-shadow: 
+      -4px -4px 10px rgba(255, 255, 255, 0.05),
+      4px 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .manipulate-button:hover {
+    box-shadow: 
+      -3px -3px 8px rgba(255, 255, 255, 0.05),
+      3px 3px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(0.99);
+  }
+  
+  .manipulate-button:active {
+    box-shadow: 
+      inset -2px -2px 5px rgba(255, 255, 255, 0.05),
+      inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+    transform: scale(0.98);
+  }

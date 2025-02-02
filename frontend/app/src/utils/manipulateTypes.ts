@@ -28,10 +28,17 @@ export interface ClearManipulation {
     type: 'clear';
 }
 
+export interface RemoveManipulation {
+    type: 'remove';
+    index: number;
+}
+
+
 export type Manipulation<T> = 
     | AppendManipulation<T>
     | PopManipulation
     | ReverseManipulation
     | SwapManipulation
     | ReplaceManipulation<T>
-    | ClearManipulation;
+    | ClearManipulation
+    | RemoveManipulation;

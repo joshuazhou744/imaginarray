@@ -21,6 +21,7 @@ def submit_code():
         { 'type': 'append', 'value': 3 },
         { 'type': 'swap', 'indices': [0, 2] },
         { 'type': 'replace', 'index': 0, 'value': 4 },
+        { 'type': 'remove', 'index': 1 }
   ] ;
     final_arr = None
     
