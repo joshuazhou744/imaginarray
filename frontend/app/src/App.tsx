@@ -16,7 +16,6 @@ const App: FC = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-  console.log(SERVER_URL)
 
   const parseCode = async (code: string) => {
     setInitialized(false);
@@ -49,7 +48,7 @@ const App: FC = () => {
       </div>
       <div className="right">
         <div className="visualizer-header">
-          <h2>ImagArray</h2>
+          <h2>ImaginArray</h2>
         </div>
         <div className="dropdown-container">
           <Dropdown handlePreset={handlePreset} />
