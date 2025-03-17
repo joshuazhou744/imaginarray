@@ -50,7 +50,7 @@ const App: FC = () => {
   return (
     <div className="homepage">
       <div className="visualizer-header">
-          <h2>ImagArray</h2>
+          <h2>ImaginArray</h2>
       </div>
       <div className="split-screen-container">
         <div className="left">
