@@ -6,10 +6,10 @@ from watcher import run_user_code
 
 app = Flask(__name__)
 
+# Update CORS to allow requests from the deployed frontend
+CORS(app, origins=["http://localhost:5173", "https://imaginarray.vercel.app"], supports_credentials=True)
 
-CORS(app, origins="http://localhost:5173", supports_credentials=True)
-
-@app.route("/submit_code", methods=["POST"])
+@app.route("/api/submit_code", methods=["POST"])
 def submit_code():
     code = request.json.get("code")  
     try:
@@ -29,6 +29,8 @@ def submit_code():
 
 # def clean_code(code):
 #     return [line for line in code if line.strip()]  
+# This is required for Vercel
+app = app
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=4000, debug=True)

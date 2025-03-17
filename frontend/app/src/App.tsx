@@ -20,7 +20,7 @@ const App: FC = () => {
     setInitialArray(initialArray);
     try {
       const lines = code.split("\n");
-      const response = await axios.post('http://127.0.0.1:4000/submit_code', {
+      const response = await axios.post('/api/submit_code', {
         code: lines,
       });
 
