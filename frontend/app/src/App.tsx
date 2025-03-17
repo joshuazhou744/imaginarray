@@ -30,10 +30,16 @@ const App: FC = () => {
       console.log("RESPONSE:", response.data);
       setInitialized(true);
       setHighlightedLine(null);
-    } catch (error) {
-      console.error('DAMMIT ERROR :( :\n', error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const msg = error.response?.data?.error;
+        if (msg) {
+          alert(`Compile Error: ${msg}`);
+        }
+      }
+      console.error("Error in parseCode:", error);
     }
-  };
+  }
 
   const handlePreset = (preset: string) => {
     setCode(preset)

@@ -1,4 +1,3 @@
-// Variables.tsx
 import React from "react";
 import "../styles/Variables.css";
 
@@ -15,14 +14,14 @@ const Variables: React.FC<VariablesProps> = ({ variables }) => {
       {keys.length === 0 ? (
         <p>No variables tracked.</p>
       ) : (
-        <ul className="variables-list">
+        <div className="variables-items">
           {keys.map((key) => (
-            <li key={key} className="variable-item">
+            <div key={key} className="variable-item">
               <span className="variable-name">{key}:</span>{" "}
               <span className="variable-value">{JSON.stringify(variables[key])}</span>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

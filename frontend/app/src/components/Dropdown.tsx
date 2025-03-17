@@ -29,7 +29,6 @@ def insertion_sort(arr):
             arr[j+1] = arr[j]
             j -= 1
         arr[j+1] = key
-    return arr
 
 # Fill in the array with your own values
 arr = []

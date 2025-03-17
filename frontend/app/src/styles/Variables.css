@@ -1,53 +1,47 @@
-/* Variables.css */
 .variables-container {
-    background: #f5f5f5;
-    border: 1px solid #ccc;
-    padding: 1rem 0;
-    border-radius: 8px;
-    width: 15vw;
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto;
-    text-align: center;
-  }
-  
-  .variables-container h3 {
-    margin-top: 0;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .variables-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    font-size: 12px;
-  }
-  
-  .variable-item {
-    margin-bottom: 0.8rem;
-    padding: 0.5rem;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .variable-name {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .variable-value {
-    margin-left: 0.5rem;
-    color: #333;
-  }
-  
-  .variable-manipulations {
-    margin-top: 0.5rem;
-    list-style-type: disc;
-    padding-left: 1.2rem;
-    font-size: 0.5rem;
-    color: #777;
-  }
-  
+  position: absolute;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  max-width: 200px;
+  margin-top: 20rem; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.variables-container h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.variables-items {
+  display: grid;
+  grid-auto-flow: column; /* Fill items in columns */
+  grid-template-rows: repeat(2, auto); /* Two rows */
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.variable-item {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.variable-name {
+  font-weight: bold;
+  color: #555;
+}
+
+.variable-value {
+  margin-left: 0.3rem;
+  color: #333;
+}
