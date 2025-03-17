@@ -1,6 +1,8 @@
 import sys
 import ast
 import io
+import types
+import json
 from contextlib import redirect_stdout
 
 SAFE_BUILTINS = {
@@ -12,6 +14,53 @@ SAFE_BUILTINS = {
     "bool": bool,
     "list": list
 }
+
+class LocalVarTracer:
+    def __init__(self, manipulations):
+        self.manipulations = manipulations
+        self.last_locals = {}
+
+    def __call__(self, frame, event, arg):
+        if event == "line":
+            if frame.f_code.co_name == "<module>":
+                return self
+            lineno = frame.f_lineno
+            filename = frame.f_code.co_filename
+            if "watcher.py" in filename or "server.py" in filename:
+                return self
+            
+            allowed_vars = {"i", "j", "k", "x", "y", "min_idx","max_idx", "arr", "pi", "pivot", "a", "b", "c","n", "swapped"}
+            locals_dict = frame.f_locals
+
+            for var_name, var_value in locals_dict.items():
+                if var_name not in allowed_vars or var_name in {"self", "new_target"}:
+                    continue 
+                if isinstance(var_value, types.FunctionType):
+                    continue
+
+                old_val = self.last_locals.get(var_name, None)
+                if var_value != old_val:
+                    self.manipulations.append({
+                        "type": "variable",
+                        "name": var_name,
+                        "value": var_value,
+                        "line": lineno
+                    })
+
+            removed_vars = set(self.last_locals.keys()) - set(locals_dict.keys())
+            for var_name in removed_vars:
+                if (var_name in allowed_vars) and (var_name not in {"self", "new_target"}):
+                    self.manipulations.append({
+                        "type": "variable",
+                        "name": var_name,
+                        "value": None,
+                        "line": lineno
+                    })
+
+            self.last_locals = dict(locals_dict)
+
+        return self 
+        
 
 class TrackedList(list):
     def __init__(self, *args, manipulations=None):
@@ -44,20 +93,28 @@ class TrackedList(list):
     def __setitem__(self, index, value):
         old_value = self[index] if 0 <= index < len(self) else None
 
+        frame = sys._getframe(1)
+        line_no = frame.f_lineno
+
         if self._last_setitem_call:
-            last_index, last_old_value, last_new_value = self._last_setitem_call
-            # Detect a swap pattern: arr[i], arr[j] = arr[j], arr[i]
-            if (index != last_index and old_value == last_new_value and value == last_old_value):
-                super().__setitem__(index, value)
-                if self._manipulations and self._manipulations[-1]["type"] == "replace":
-                    self._manipulations.pop()
-                self._record_manipulation("swap", indices=[last_index, index])
-                self._last_setitem_call = None
-                return
+            last_line, last_index, last_old_value, last_new_value = self._last_setitem_call
+
+            if line_no == last_line:
+                if (index != last_index 
+                    and old_value == last_new_value 
+                    and value == last_old_value):
+                    super().__setitem__(index, value)
+
+                    if self._manipulations and self._manipulations[-1]["type"] == "replace":
+                        self._manipulations.pop()
+
+                    self._record_manipulation("swap", line=line_no, indices=[last_index, index])
+                    self._last_setitem_call = None
+                    return
 
         super().__setitem__(index, value)
-        self._record_manipulation("replace", index=index, value=value)
-        self._last_setitem_call = (index, old_value, value)
+        self._record_manipulation("replace", line=line_no, index=index, value=value)
+        self._last_setitem_call = (line_no, index, old_value, value)
 
     def insert(self, index, value):
         super().insert(index, value)
@@ -154,10 +211,16 @@ def scrub_for_json(obj):
         return {k: scrub_for_json(v) for k, v in obj.items()}
     elif isinstance(obj, list):
         return [scrub_for_json(x) for x in obj]
+    elif isinstance(obj, redirect_stdout.__class__):
+        return "<redirect_stdout>"
     elif callable(obj):
         return f"<function {obj.__name__}>" if hasattr(obj, "__name__") else str(obj)
     else:
-        return obj
+        try:
+            json.dumps(obj)
+            return obj
+        except Exception:
+            return str(obj)
 
 class TrackingDict(dict):
     """
@@ -168,67 +231,57 @@ class TrackingDict(dict):
         super().__init__(*args, **kwargs)
         self.manipulations = manipulations
         self.arr_name = arr_name
-        self.tracked_vars = {}  # key: variable name, value: TrackedVariable
 
     def __setitem__(self, key, value):
+        if key in {"new_target", "self"}:
+            super().__setitem__(key, value)
+            return
+        
         if key == self.arr_name and isinstance(value, list) and not isinstance(value, TrackedList):
             value = TrackedList(value, manipulations=self.manipulations)
             super().__setitem__(key, value)
             return
-
-        old_val = self.get(key, None)
-        if old_val != value:
-            frame = sys._getframe(1)
-            line_no = frame.f_lineno
-            if key in self.tracked_vars:
-                self.tracked_vars[key].update(value, line_no)
-            else:
-                tv = TrackedVariable(key, value)
-                tv.manipulations.append({
-                    "type": "variable",
-                    "name": key,
-                    "value": value,
-                    "line": line_no
-                })
-                self.tracked_vars[key] = tv
-            self.manipulations.append({
-                "type": "variable",
-                "name": key,
-                "value": value,
-                "line": line_no
-            })
+        
+        if key == self.arr_name:
+            super().__setitem__(key, value)
+            return
         super().__setitem__(key, value)
 
 def run_user_code(code_lines):
     manipulations = []
-
+    
     initial_arr, arr_name = extract_initial_array(code_lines)
-    print(f"Initial Array is: {initial_arr}")
-
-    arr = TrackedList(initial_arr, manipulations=manipulations)
-
     exec_env = TrackingDict(manipulations, arr_name, **SAFE_BUILTINS)
-    exec_env[arr_name] = arr
+
+    if arr_name is not None:
+        arr = TrackedList(initial_arr, manipulations=manipulations)
+        exec_env[arr_name] = arr
+    else:
+        exec_env["arr"] = initial_arr
 
     normalized = normalize_indentation(code_lines)
     full_code = "\n".join(normalized)
 
+    tracer = LocalVarTracer(manipulations)
+    sys.settrace(tracer)
+
     try:
-        exec(full_code, exec_env)
+        output_buffer = io.StringIO()
+        with redirect_stdout(output_buffer):
+            exec(full_code, exec_env)
     except Exception as e:
         print(f"Error executing code:\n{full_code}\n{e}")
+        raise
+    finally:
+        sys.settrace(None)
 
     line_nums = [m["line"] for m in manipulations if "line" in m]
-    line_nums = scrub_for_json(line_nums)
+    final_arr = list(exec_env[arr_name]) if arr_name in exec_env else initial_arr
+    
+    manipulations = scrub_for_json(manipulations)
 
-    variable_manips = [m for m in manipulations if m["type"] == "variable"]
-    arr.tracked_vars = {k: v.to_dict() for k, v in exec_env.tracked_vars.items()}
+    return initial_arr, final_arr, manipulations, line_nums
 
-    final_arr = exec_env[arr_name]
-    final_arr = list(final_arr)
-    sanitized_manipulations = scrub_for_json(manipulations)
-
-    return initial_arr, final_arr, sanitized_manipulations, line_nums
 
 if __name__ == "__main__":
     # Test code using bubble sort with nested loops.

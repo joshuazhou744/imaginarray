@@ -32,14 +32,16 @@ const App: FC = () => {
       setHighlightedLine(null);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        const msg = error.response?.data?.error;
-        if (msg) {
-          alert(`Compile Error: ${msg}`);
+        if (error.response?.data?.error) {
+          alert(`Execution Error: ${error.response.data.error}`);
         }
+        console.error("Axios error:\n", error);
+      } else {
+        console.error("Unknown error:\n", error);
       }
-      console.error("Error in parseCode:", error);
     }
   }
+    
 
   const handlePreset = (preset: string) => {
     setCode(preset)

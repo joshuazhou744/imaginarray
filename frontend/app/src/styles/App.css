@@ -120,10 +120,14 @@ h2 {
 }
 
 .compile-button {
-  background: #C2BBF0;
+  background-color: #C2BBF0;
   color: black;
-  font-weight: bold;
   font-size: 20px;
+  font-weight: bold;
+}
+
+.visualize-button {
+  margin-bottom: -0.25rem;
 }
 
 .visualize_button:hover,
