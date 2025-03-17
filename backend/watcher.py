@@ -29,7 +29,39 @@ class LocalVarTracer:
             if "watcher.py" in filename or "server.py" in filename:
                 return self
             
-            allowed_vars = {"i", "j", "k", "x", "y", "min_idx","max_idx", "arr", "pi", "pivot", "a", "b", "c","n", "swapped"}
+            allowed_vars = {"i", "j", "k", "x", "y", "min_idx","max_idx", "arr", "pi", 
+                            "pivot", "a", "b", "c","n", "swapped", "ARRAY", "array", "arr_name",
+                            "pivot_idx", "left", "right", "temp", "target", "n", "m", "l", "r",
+                            "mid", "val", "idx", "key",
+                            # Common result variables
+                            "result", "res", "output", "ans",
+                            
+                            # Window-related variables (for sliding window algorithms)
+                            "window", "window_size", "window_start", "window_end",
+                            
+                            # Min/Max related
+                            "min_val", "max_val", "minimum", "maximum",
+                            
+                            # Sum/Product related
+                            "sum", "total", "product",
+                            
+                            # Sorting related
+                            "sorted_arr", "sorted_array", "sorted",
+                            
+                            # Pointer related
+                            "slow", "fast", "pointer",
+                            # Additional common array variables
+                            "nums", "numbers", "list", "items", "data",
+                            
+                            # Additional index/position variables
+                            "pos", "position", "index", "idx", "start", "end", "mid", "middle",
+                            
+                            # Additional counter variables
+                            "count", "size", "length", "len",
+                            
+                            # Additional temporary variables
+                            "tmp", "val", "value", "curr", "current", "prev", "next"
+                            }
             locals_dict = frame.f_locals
 
             for var_name, var_value in locals_dict.items():
